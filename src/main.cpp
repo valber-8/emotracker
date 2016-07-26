@@ -7,6 +7,7 @@ accordance with the terms of that agreement
 Copyright(c) 2012-2013 Intel Corporation. All Rights Reserved.
 
 *******************************************************************************/
+#include <afxwin.h>
 #include <Windows.h>
 #include <WindowsX.h>
 #include <commctrl.h>
@@ -27,6 +28,7 @@ Copyright(c) 2012-2013 Intel Corporation. All Rights Reserved.
 #include "FaceTrackingProcessor.h"
 
 pxcCHAR fileName[1024] = { 0 };
+pxcCHAR fileEmoName[1024] = { 0 };
 PXCSession* session = NULL;
 FaceTrackingRendererManager* renderer = NULL;
 FaceTrackingProcessor* processor = NULL;
@@ -95,16 +97,16 @@ void GetEmotionsRecordFile(void)
 	OPENFILENAME filename;
 	memset(&filename, 0, sizeof(filename));
 	filename.lStructSize = sizeof(filename);
-	filename.lpstrFilter = L"RSSDK clip (*.ttml)\0*.ttml\0All Files (*.*)\0*.*\0\0";
-	filename.lpstrFile = fileName;
+	filename.lpstrFilter = L"Subtitle file(*.ttml)\0*.ttml\0All Files (*.*)\0*.*\0\0";
+	filename.lpstrFile = fileEmoName;
 	fileName[0] = 0;
-	filename.nMaxFile = sizeof(fileName) / sizeof(pxcCHAR);
+	filename.nMaxFile = sizeof(fileEmoName) / sizeof(pxcCHAR);
 	filename.Flags = OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST | OFN_EXPLORER;
 	if (GetSaveFileName(&filename)) {
 		if (filename.nFilterIndex == 1 && filename.nFileExtension == 0) {
-			size_t len = std::char_traits<wchar_t>::length(fileName);
-			if (len>1 && len<sizeof(fileName) / sizeof(pxcCHAR) - 7) {
-				wcscpy_s(&fileName[len], rsize_t(7), L".ttml\0");
+			size_t len = std::char_traits<wchar_t>::length(fileEmoName);
+			if (len>1 && len<sizeof(fileEmoName) / sizeof(pxcCHAR) - 6) {
+				wcscpy_s(&fileEmoName[len], rsize_t(6), L".ttml\0");
 			}
 		}
 	}
@@ -478,7 +480,8 @@ INT_PTR CALLBACK MessageLoopThread(HWND dialogWindow, UINT message, WPARAM wPara
 			return TRUE;
 
 		case IDC_SAVEEMOTIONS:
-			GetEmotionsRecordFile();
+			if (FaceTrackingUtilities::IsModuleSelected(dialogWindow, IDC_SAVEEMOTIONS))
+				GetEmotionsRecordFile();
 			return TRUE;
 
 		case IDC_RECOGNITION:

@@ -1,23 +1,54 @@
 #include "FaceTrackingProcessor.h"
 #include <assert.h>
+#include <afxwin.h>
 #include <string>
 #include "pxcfaceconfiguration.h"
+#include "PXCPersonTrackingData.h"
+#include "pxcpersontrackingconfiguration.h"
 #include "pxcfacemodule.h"
 #include "pxcsensemanager.h"
+#include "pxccapture.h"
 #include "FaceTrackingUtilities.h"
 #include "FaceTrackingAlertHandler.h"
 #include "FaceTrackingRendererManager.h"
 #include "resource.h"
+#include <time.h>
 //#include <vld.h>
+
 extern PXCSession* session;
 extern FaceTrackingRendererManager* renderer;
 
 extern volatile bool isStopped;
 extern volatile bool isActiveApp;
 extern pxcCHAR fileName[1024];
+extern pxcCHAR fileEmoName[1024];
 extern HANDLE ghMutex;
 
-FaceTrackingProcessor::FaceTrackingProcessor(HWND window) : m_window(window), m_registerFlag(false), m_unregisterFlag(false) { }
+std::map<PXCFaceData::ExpressionsData::FaceExpression, std::wstring> FaceTrackingProcessor::InitExpressionsMap()
+{
+	std::map<PXCFaceData::ExpressionsData::FaceExpression, std::wstring> map;
+	map[PXCFaceData::ExpressionsData::EXPRESSION_SMILE] = std::wstring(L"Smile");
+	map[PXCFaceData::ExpressionsData::EXPRESSION_MOUTH_OPEN] = std::wstring(L"Mouth Open");
+	map[PXCFaceData::ExpressionsData::EXPRESSION_KISS] = std::wstring(L"Kiss");
+	map[PXCFaceData::ExpressionsData::EXPRESSION_EYES_TURN_LEFT] = std::wstring(L"Eyes Turn Left");
+	map[PXCFaceData::ExpressionsData::EXPRESSION_EYES_TURN_RIGHT] = std::wstring(L"Eyes Turn Right");
+	map[PXCFaceData::ExpressionsData::EXPRESSION_EYES_UP] = std::wstring(L"Eyes Up");
+	map[PXCFaceData::ExpressionsData::EXPRESSION_EYES_DOWN] = std::wstring(L"Eyes Down");
+	map[PXCFaceData::ExpressionsData::EXPRESSION_BROW_RAISER_LEFT] = std::wstring(L"Brow Raised Left");
+	map[PXCFaceData::ExpressionsData::EXPRESSION_BROW_RAISER_RIGHT] = std::wstring(L"Brow Raised Right");
+	map[PXCFaceData::ExpressionsData::EXPRESSION_BROW_LOWERER_LEFT] = std::wstring(L"Brow Lowered Left");
+	map[PXCFaceData::ExpressionsData::EXPRESSION_BROW_LOWERER_RIGHT] = std::wstring(L"Brow Lowered Right");
+	map[PXCFaceData::ExpressionsData::EXPRESSION_EYES_CLOSED_LEFT] = std::wstring(L"Closed Eye Left");
+	map[PXCFaceData::ExpressionsData::EXPRESSION_EYES_CLOSED_RIGHT] = std::wstring(L"Closed Eye Right");
+	map[PXCFaceData::ExpressionsData::EXPRESSION_TONGUE_OUT] = std::wstring(L"Tongue Out");
+	map[PXCFaceData::ExpressionsData::EXPRESSION_PUFF_RIGHT] = std::wstring(L"Puff Right Cheek");
+	map[PXCFaceData::ExpressionsData::EXPRESSION_PUFF_LEFT] = std::wstring(L"Puff Left Cheek");
+	return map;
+}
+
+FaceTrackingProcessor::FaceTrackingProcessor(HWND window) : m_window(window), m_registerFlag(false), m_unregisterFlag(false) { 
+	m_expressionMap = InitExpressionsMap();
+}
 
 void FaceTrackingProcessor::PerformRegistration()
 {
@@ -64,9 +95,162 @@ void FaceTrackingProcessor::CheckForDepthStream(PXCSenseManager* pp, HWND hwndDl
 	}
 }
 
+void FaceTrackingProcessor::WriteEmo(PXCFaceData* faceOutput, PXCPersonTrackingData* personOutput, CStdioFile* file)
+{
+	
+	WCHAR tempLine[200];
+	double curtime = (clock() - starttime)/ (double)CLOCKS_PER_SEC;
+	swprintf_s<sizeof(tempLine) / sizeof(pxcCHAR)>(tempLine, L"			<p begin=\"%.2fs\" end=\"%.2fs\">\n", prevtime, curtime);
+	file->WriteString(tempLine);
+	const int numFaces = faceOutput->QueryNumberOfDetectedFaces();
+	for (int i = 0; i < numFaces; ++i)
+	{
+
+		PXCFaceData::Face* trackedFace = faceOutput->QueryFaceByIndex(i);
+		assert(trackedFace != NULL);
+
+		PXCFaceData::ExpressionsData* expressionsData = trackedFace->QueryExpressions();
+		if (!expressionsData)
+			continue;
+		file->WriteString(L"				<data type=\"text/plain; charset = us-ascii\">\n");
+		swprintf_s<sizeof(tempLine) / sizeof(pxcCHAR)>(tempLine, L"					<metadata face:ID=\"%d\"></metadata>\n", trackedFace->QueryUserID());
+		file->WriteString(tempLine);
+		for (auto expressionIter = m_expressionMap.begin(); expressionIter != m_expressionMap.end(); expressionIter++)
+		{
+			PXCFaceData::ExpressionsData::FaceExpressionResult expressionResult;
+			if (expressionsData->QueryExpression(expressionIter->first, &expressionResult))
+			{
+				int intensity = expressionResult.intensity;
+				std::wstring expressionName = expressionIter->second;
+
+				swprintf_s<sizeof(tempLine) / sizeof(WCHAR)>(tempLine, L"					<chunk xml:id=\"%s\">%d</chunk>\n", expressionName.c_str(), intensity);
+
+				file->WriteString(tempLine);
+				//TextOut(dc2, xStartingPosition, yPosition, tempLine, (int)std::char_traits<wchar_t>::length(tempLine));
+			}
+		}
+
+		file->WriteString(L"				</data>\n");
+	}
+
+
+	const int numPersons = personOutput->QueryNumberOfPeople();
+	for (int i = 0; i < numPersons; ++i)
+	{
+		PXCPersonTrackingData::Person* personData = personOutput->QueryPersonData(PXCPersonTrackingData::ACCESS_ORDER_BY_ID, i);
+
+		assert(personData != NULL);
+
+		file->WriteString(L"				<data type=\"text/plain; charset = us-ascii\">\n");
+		swprintf_s<sizeof(tempLine) / sizeof(pxcCHAR)>(tempLine, L"					<metadata person:ID=\"%d\"></metadata>\n", i);
+		file->WriteString(tempLine);
+		int max = 0;
+		std::wstring emo=L"Unavailable";
+
+		PXCPersonTrackingData::PersonExpressions* personExpressions = personData->QueryExpressions();
+		PXCPersonTrackingData::PersonExpressions::PersonExpressionsResult neutralResult;
+		bool isNeutralExpressionValid = personExpressions->QueryExpression(PXCPersonTrackingData::PersonExpressions::NEUTRAL, &neutralResult);
+		//if (isNeutralExpressionValid)
+		//{
+			swprintf_s<sizeof(tempLine) / sizeof(WCHAR) >(tempLine, L"					<chunk xml:id=\"Neutral\">%d</chunk>\n", neutralResult.confidence);
+			file->WriteString(tempLine);
+			if (neutralResult.confidence > max) {
+				max = neutralResult.confidence;		emo = L"Neutral";
+			}
+		//}
+
+		PXCPersonTrackingData::PersonExpressions::PersonExpressionsResult happinessResult;
+		bool isHappinessExpressionValid = personExpressions->QueryExpression(PXCPersonTrackingData::PersonExpressions::HAPPINESS, &happinessResult);
+		//if (isHappinessExpressionValid)
+		//{
+			swprintf_s<sizeof(tempLine) / sizeof(WCHAR) >(tempLine, L"					<chunk xml:id=\"Happiness\">%d</chunk>\n", happinessResult.confidence);
+			file->WriteString(tempLine);
+			if (happinessResult.confidence > max) {
+				max = happinessResult.confidence;		emo = L"Happy";
+			}
+		//}
+
+		PXCPersonTrackingData::PersonExpressions::PersonExpressionsResult sadnessResult;
+		bool isSadnessExpressionValid = personExpressions->QueryExpression(PXCPersonTrackingData::PersonExpressions::SADNESS, &sadnessResult);
+		//if (isSadnessExpressionValid)
+		//{
+			swprintf_s<sizeof(tempLine) / sizeof(WCHAR) >(tempLine, L"					<chunk xml:id=\"Sadness\">%d</chunk>\n", sadnessResult.confidence);
+			file->WriteString(tempLine);
+			if (sadnessResult.confidence > max) {
+				max = sadnessResult.confidence;		emo = L"Sad";
+			}
+		//}
+
+		PXCPersonTrackingData::PersonExpressions::PersonExpressionsResult surpriseResult;
+		bool isSurpriseExpressionValid = personExpressions->QueryExpression(PXCPersonTrackingData::PersonExpressions::SURPRISE, &surpriseResult);
+		//if (isSurpriseExpressionValid)
+		//{
+			swprintf_s<sizeof(tempLine) / sizeof(WCHAR) >(tempLine, L"					<chunk xml:id=\"Surprised\">%d</chunk>\n", surpriseResult.confidence);
+			file->WriteString(tempLine);
+			if (surpriseResult.confidence > max) {
+				max = surpriseResult.confidence;		emo = L"Surprised";
+			}
+		//}
+
+		PXCPersonTrackingData::PersonExpressions::PersonExpressionsResult disgustResult;
+		bool isDisgustExpressionValid = personExpressions->QueryExpression(PXCPersonTrackingData::PersonExpressions::DISGUST, &disgustResult);
+		//if (isDisgustExpressionValid)
+		//{
+			swprintf_s<sizeof(tempLine) / sizeof(WCHAR) >(tempLine, L"					<chunk xml:id=\"Disgusted\">%d</chunk>\n", disgustResult.confidence);
+			file->WriteString(tempLine);
+			if (disgustResult.confidence > max) {
+				max = disgustResult.confidence;		emo = L"Disgusted";
+			}
+		//}
+
+		PXCPersonTrackingData::PersonExpressions::PersonExpressionsResult contemptResult;
+		bool isContemptExpressionValid = personExpressions->QueryExpression(PXCPersonTrackingData::PersonExpressions::CONTEMPT, &contemptResult);
+		//if (isContemptExpressionValid)
+		//{
+			swprintf_s<sizeof(tempLine) / sizeof(WCHAR) >(tempLine, L"					<chunk xml:id=\"Contemptful\">%d</chunk>\n", contemptResult.confidence);
+			file->WriteString(tempLine);
+			if (contemptResult.confidence > max) {
+				max = contemptResult.confidence;		emo = L"Contemptful";
+			}
+		//}
+
+		PXCPersonTrackingData::PersonExpressions::PersonExpressionsResult fearResult;
+		bool isFearExpressionValid = personExpressions->QueryExpression(PXCPersonTrackingData::PersonExpressions::FEAR, &fearResult);
+		//if (isFearExpressionValid)
+		//{
+			swprintf_s<sizeof(tempLine) / sizeof(WCHAR) >(tempLine, L"					<chunk xml:id=\"Fearful\">%d</chunk>\n", fearResult.confidence);
+			file->WriteString(tempLine);
+			if (fearResult.confidence > max) {
+				max = fearResult.confidence;		emo = L"Fear";
+			}
+		//}
+
+		PXCPersonTrackingData::PersonExpressions::PersonExpressionsResult angerResult;
+		bool isAngerExpressionValid = personExpressions->QueryExpression(PXCPersonTrackingData::PersonExpressions::ANGER, &angerResult);
+		//if (isAngerExpressionValid)
+		//{
+			swprintf_s<sizeof(tempLine) / sizeof(WCHAR) >(tempLine, L"					<chunk xml:id=\"Angry\">%d</chunk>\n", angerResult.confidence);
+			file->WriteString(tempLine);
+			if (angerResult.confidence > max) {
+				max = angerResult.confidence;		emo = L"Angry";
+			}
+		//}
+		file->WriteString(L"				</data>\n");
+		swprintf_s<sizeof(tempLine) / sizeof(WCHAR) >(tempLine, L"				%s\n", emo.c_str());
+		file->WriteString(tempLine);
+	}
+
+	file->WriteString(L"				Some emotion\n");
+	file->WriteString(L"			</p>\n");
+	prevtime = curtime;
+}
+
 void FaceTrackingProcessor::Process(HWND dialogWindow)
 {
+	CStdioFile emoFile;
 	PXCSenseManager* senseManager = session->CreateSenseManager();
+	starttime = clock();
+	prevtime = 0.0;
 	if (senseManager == NULL) 
 	{
 		FaceTrackingUtilities::SetStatus(dialogWindow, L"Failed to create an SDK SenseManager", statusPart);
@@ -75,6 +259,22 @@ void FaceTrackingProcessor::Process(HWND dialogWindow)
 
 	/* Set Mode & Source */
 	PXCCaptureManager* captureManager = senseManager->QueryCaptureManager();
+
+	if (FaceTrackingUtilities::IsModuleSelected(dialogWindow, IDC_SAVEEMOTIONS))
+	{
+		emoFile.Open(fileEmoName, CFile::modeCreate | CFile::modeWrite);
+		emoFile.WriteString(L"<?xml version = \"1.0\" encoding = \"UTF-8\" ?>\n");
+		emoFile.WriteString(L"<tt xmlns = \"http://www.w3.org/ns/ttml\">\n");
+		emoFile.WriteString(L"	<head>\n");
+		emoFile.WriteString(L"		<metadata xmlns : ttm = \"http://www.w3.org/ns/ttml#metadata\">\n");
+		emoFile.WriteString(L"			<ttm:title>Timed Text TTML Example</ttm:title>\n");
+		emoFile.WriteString(L"			<ttm:copyright>The Authors(c) 2006</ttm:copyright>\n");
+		emoFile.WriteString(L"		</metadata>\n");
+		emoFile.WriteString(L"	</head>\n");
+		emoFile.WriteString(L"	<body>\n");
+		emoFile.WriteString(L"		<div>\n");
+
+	}
 	if (!FaceTrackingUtilities::GetPlaybackState(dialogWindow))
 	{
 		captureManager->FilterByDeviceInfo(FaceTrackingUtilities::GetCheckedDeviceInfo(dialogWindow));
@@ -98,6 +298,8 @@ void FaceTrackingProcessor::Process(HWND dialogWindow)
 
 	/* Set Module */
 	senseManager->EnableFace();
+
+	senseManager->EnablePersonTracking();
 
 	/* Initialize */
 	FaceTrackingUtilities::SetStatus(dialogWindow, L"Init Started", statusPart);
@@ -126,6 +328,18 @@ void FaceTrackingProcessor::Process(HWND dialogWindow)
 		captureManager->FilterByStreamProfiles(&set);
 	}
 		
+	PXCPersonTrackingModule* personModule = senseManager->QueryPersonTracking();
+	if (personModule == NULL)
+	{
+		assert(personModule);
+		return;
+	}
+	PXCPersonTrackingConfiguration* pconfig = personModule->QueryConfiguration();
+	if (pconfig == NULL)
+	{
+		assert(pconfig);
+		return;
+	}
 	if (senseManager->Init() < PXC_STATUS_NO_ERROR)
 	{
 		captureManager->FilterByStreamProfiles(NULL);
@@ -133,6 +347,7 @@ void FaceTrackingProcessor::Process(HWND dialogWindow)
 		{
 			FaceTrackingUtilities::SetStatus(dialogWindow, L"Init Failed", statusPart);
 			config->Release();
+			pconfig->Release();
 			senseManager->Close();
 			senseManager->Release();
 			return;
@@ -165,7 +380,14 @@ void FaceTrackingProcessor::Process(HWND dialogWindow)
         {
             config->QueryRecognition()->Enable();
         }
-
+		if (FaceTrackingUtilities::IsModuleSelected(dialogWindow, IDC_SAVEEMOTIONS))
+		{
+			config->QueryExpressions()->Enable();
+			config->QueryExpressions()->EnableAllExpressions();
+			config->QueryPulse()->Enable();
+			pconfig->QueryExpressions()->Enable();
+			pconfig->QueryExpressions()->EnableAllExpressions();
+		}
         config->EnableAllAlerts();
         config->SubscribeAlert(&alertHandler);
 
@@ -173,6 +395,7 @@ void FaceTrackingProcessor::Process(HWND dialogWindow)
     }
     FaceTrackingUtilities::SetStatus(dialogWindow, L"Streaming", statusPart);
     m_output = faceModule->CreateOutput();
+	m_poutput = personModule->QueryOutput();
 
     bool isNotFirstFrame = false;
     bool isFinishedPlaying = false;
@@ -222,6 +445,9 @@ void FaceTrackingProcessor::Process(HWND dialogWindow)
 					renderer->DrawBitmap(sample, config->GetTrackingMode() == PXCFaceConfiguration::FACE_MODE_IR);
 					renderer->SetOutput(m_output);
 					renderer->SignalRenderer();
+
+					WriteEmo(m_output, m_poutput, &emoFile);
+
 					if(!ReleaseMutex(ghMutex))
 					{
 						throw std::exception("Failed to release mutex");
@@ -245,6 +471,15 @@ void FaceTrackingProcessor::Process(HWND dialogWindow)
         m_output->Release();
         FaceTrackingUtilities::SetStatus(dialogWindow, L"Stopped", statusPart);
     }
+
+	if (FaceTrackingUtilities::IsModuleSelected(dialogWindow, IDC_SAVEEMOTIONS))
+	{
+
+		emoFile.WriteString(L"		</div>\n");
+		emoFile.WriteString(L"	</body>\n");
+		emoFile.WriteString(L"</tt>\n");
+		emoFile.Close();
+	}
 
 	config->Release();
 	senseManager->Close(); 
