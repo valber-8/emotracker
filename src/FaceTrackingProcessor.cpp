@@ -24,6 +24,9 @@ extern pxcCHAR fileName[1024];
 extern pxcCHAR fileEmoName[1024];
 extern HANDLE ghMutex;
 
+
+extern int horizontal,vertical;
+
 std::map<PXCFaceData::ExpressionsData::FaceExpression, std::wstring> FaceTrackingProcessor::InitExpressionsMap()
 {
 	std::map<PXCFaceData::ExpressionsData::FaceExpression, std::wstring> map;
@@ -100,7 +103,7 @@ void FaceTrackingProcessor::WriteEmo(PXCFaceData* faceOutput, PXCPersonTrackingD
 	
 	WCHAR tempLine[200];
 	double curtime = (clock() - starttime)/ (double)CLOCKS_PER_SEC;
-	swprintf_s<sizeof(tempLine) / sizeof(pxcCHAR)>(tempLine, L"			<p begin=\"%.2fs\" end=\"%.2fs\">\n", prevtime, curtime);
+	swprintf_s<sizeof(tempLine) / sizeof(pxcCHAR)>(tempLine, L"			<p begin=\"%.2d:%.2d:%05.2f\" end=\"%.2d:%.2d:%05.2f\">\n",(int)prevtime/3600,(int)prevtime/60-((int)prevtime / 3600)*60, prevtime-((int)prevtime/60)*60.0, (int)curtime/3600, (int)curtime/60 - ((int)curtime/3600)*60, curtime-((int)curtime/60)*60.0);
 	file->WriteString(tempLine);
 	const int numFaces = faceOutput->QueryNumberOfDetectedFaces();
 	for (int i = 0; i < numFaces; ++i)
@@ -113,7 +116,7 @@ void FaceTrackingProcessor::WriteEmo(PXCFaceData* faceOutput, PXCPersonTrackingD
 		if (!expressionsData)
 			continue;
 		file->WriteString(L"				<data type=\"text/plain; charset = us-ascii\">\n");
-		swprintf_s<sizeof(tempLine) / sizeof(pxcCHAR)>(tempLine, L"					<metadata face:ID=\"%d\"></metadata>\n", trackedFace->QueryUserID());
+		swprintf_s<sizeof(tempLine) / sizeof(pxcCHAR)>(tempLine, L"					<metadata faceID=\"%d\"></metadata>\n", trackedFace->QueryUserID());
 		file->WriteString(tempLine);
 		for (auto expressionIter = m_expressionMap.begin(); expressionIter != m_expressionMap.end(); expressionIter++)
 		{
@@ -142,7 +145,7 @@ void FaceTrackingProcessor::WriteEmo(PXCFaceData* faceOutput, PXCPersonTrackingD
 		assert(personData != NULL);
 
 		file->WriteString(L"				<data type=\"text/plain; charset = us-ascii\">\n");
-		swprintf_s<sizeof(tempLine) / sizeof(pxcCHAR)>(tempLine, L"					<metadata person:ID=\"%d\"></metadata>\n", i);
+		swprintf_s<sizeof(tempLine) / sizeof(pxcCHAR)>(tempLine, L"					<metadata personID=\"%d\"></metadata>\n", i);
 		file->WriteString(tempLine);
 		int max = 0;
 		std::wstring emo=L"Unavailable";
@@ -239,7 +242,22 @@ void FaceTrackingProcessor::WriteEmo(PXCFaceData* faceOutput, PXCPersonTrackingD
 		swprintf_s<sizeof(tempLine) / sizeof(WCHAR) >(tempLine, L"				%s\n", emo.c_str());
 		file->WriteString(tempLine);
 	}
+	for (int i = 0; i < numFaces; ++i)
+	{
 
+		PXCFaceData::Face* trackedFace = faceOutput->QueryFaceByIndex(i);
+		assert(trackedFace != NULL);
+		if (trackedFace->QueryGaze()) {
+
+			PXCFaceData::GazePoint new_point = trackedFace->QueryGaze()->QueryGazePoint();
+			pxcI32 eye_point_x = new_point.screenPoint.x;
+			pxcI32 eye_point_y = new_point.screenPoint.y;
+
+			swprintf_s<sizeof(tempLine) / sizeof(WCHAR) >(tempLine, L"				<span tts:origin=\"%d%% %d%%\">+</span>\n", (int)(eye_point_x*100.0/horizontal), (int)(eye_point_y*100.0/vertical));
+			file->WriteString(tempLine);
+		}
+	}
+	
 	file->WriteString(L"				Some emotion\n");
 	file->WriteString(L"			</p>\n");
 	prevtime = curtime;
@@ -247,6 +265,8 @@ void FaceTrackingProcessor::WriteEmo(PXCFaceData* faceOutput, PXCPersonTrackingD
 
 void FaceTrackingProcessor::Process(HWND dialogWindow)
 {
+	
+
 	CStdioFile emoFile;
 	PXCSenseManager* senseManager = session->CreateSenseManager();
 	starttime = clock();
@@ -262,11 +282,12 @@ void FaceTrackingProcessor::Process(HWND dialogWindow)
 
 	if (FaceTrackingUtilities::IsModuleSelected(dialogWindow, IDC_SAVEEMOTIONS))
 	{
+		
 		emoFile.Open(fileEmoName, CFile::modeCreate | CFile::modeWrite);
 		emoFile.WriteString(L"<?xml version = \"1.0\" encoding = \"UTF-8\" ?>\n");
 		emoFile.WriteString(L"<tt xmlns = \"http://www.w3.org/ns/ttml\">\n");
 		emoFile.WriteString(L"	<head>\n");
-		emoFile.WriteString(L"		<metadata xmlns : ttm = \"http://www.w3.org/ns/ttml#metadata\">\n");
+		emoFile.WriteString(L"		<metadata xmlns:ttm = \"http://www.w3.org/ns/ttml#metadata\">\n");
 		emoFile.WriteString(L"			<ttm:title>Timed Text TTML Example</ttm:title>\n");
 		emoFile.WriteString(L"			<ttm:copyright>The Authors(c) 2006</ttm:copyright>\n");
 		emoFile.WriteString(L"		</metadata>\n");
@@ -316,8 +337,23 @@ void FaceTrackingProcessor::Process(HWND dialogWindow)
 		assert(config);
 		return;
 	}
+
+	config->QueryGaze()->isEnabled = true;
+
 	config->SetTrackingMode(FaceTrackingUtilities::GetCheckedProfile(dialogWindow));
 	config->ApplyChanges();
+
+	pxcCHAR *calibFileName = L"C:\\Users\\test\\Source\\Repos\\emotracker\\calib.bin";
+	FILE* my_file = _wfopen(calibFileName, L"rb");
+	short calibBuffersize = config->QueryGaze()->QueryCalibDataSize();
+	unsigned char* calibBuffer = new unsigned char[calibBuffersize];
+	fread(calibBuffer, calibBuffersize, sizeof(pxcBYTE), my_file);
+	fclose(my_file);
+	pxcStatus st = config->QueryGaze()->LoadCalibration(calibBuffer, calibBuffersize);
+	if (st != PXC_STATUS_NO_ERROR) {
+		assert(config);
+		return;
+	}
 
 	if (FaceTrackingUtilities::IsModuleSelected(dialogWindow, IDC_PULSE) && !FaceTrackingUtilities::GetPlaybackState(dialogWindow))
 	{
