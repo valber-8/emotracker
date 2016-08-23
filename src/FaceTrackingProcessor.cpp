@@ -253,7 +253,7 @@ void FaceTrackingProcessor::WriteEmo(PXCFaceData* faceOutput, PXCPersonTrackingD
 			pxcI32 eye_point_x = new_point.screenPoint.x;
 			pxcI32 eye_point_y = new_point.screenPoint.y;
 
-			swprintf_s<sizeof(tempLine) / sizeof(WCHAR) >(tempLine, L"				<span tts:origin=\"%d%% %d%%\">+</span>\n", (int)(eye_point_x*100.0/horizontal), (int)(eye_point_y*100.0/vertical));
+			swprintf_s<sizeof(tempLine) / sizeof(WCHAR) >(tempLine, L"				<span tts:extent=\"320px 240px\" tts:origin=\"%d%% %d%%\">+</span>\n", (int)(eye_point_x*100.0/horizontal), (int)(eye_point_y*100.0/vertical));
 			file->WriteString(tempLine);
 		}
 	}
@@ -285,7 +285,7 @@ void FaceTrackingProcessor::Process(HWND dialogWindow)
 		
 		emoFile.Open(fileEmoName, CFile::modeCreate | CFile::modeWrite);
 		emoFile.WriteString(L"<?xml version = \"1.0\" encoding = \"UTF-8\" ?>\n");
-		emoFile.WriteString(L"<tt xmlns = \"http://www.w3.org/ns/ttml\">\n");
+		emoFile.WriteString(L"<tt xmlns = \"http://www.w3.org/ns/ttml\" xmlns:tts = \"http://www.w3.org/ns/ttml#styling\" xmlns:ttm = \"http://www.w3.org/ns/ttml#metadata\" >\n");
 		emoFile.WriteString(L"	<head>\n");
 		emoFile.WriteString(L"		<metadata xmlns:ttm = \"http://www.w3.org/ns/ttml#metadata\">\n");
 		emoFile.WriteString(L"			<ttm:title>Timed Text TTML Example</ttm:title>\n");
