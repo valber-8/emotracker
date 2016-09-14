@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <title>DFXP 1.0 with caffeine</title>
+<link rel='stylesheet' type='text/css' href='base.css'/>
+<style>
+div.dfxp { 
+   background-color: black;
+   color: white;
+   margin: 0;
+   padding: 0;
+   min-height: 3em;
+}
+div.dfxp div, div.dfxp p, div.dfxp span {
+   margin: 0;
+   padding: 0;
+}
+</style>
+    <script type="text/javascript" src='HTML5_player.js'></script>
+
+  </head>
+
+  <body>
+      <h2 id="title">DFXP 1.0 with caffeine</h2>
+<p>By $Author: plehegar $, $Date: 2009/11/01 18:08:36 $</p>
+
+<p style='margin-top: 2em'>This demonstration shows several features of DFXP (which is still work in progress by the way):</p>
+<ul>
+  <li>Regions: default region, overlays, positioning</li>
+  <li>Text effects: color, italic, bold, size, fonts</li>
+  <li>Timing effects: applied on regions, paragraphs, and words.</p>
+</ul>
+
+<p>For feedback, please write to <a
+href='mailto:public-tt@w3.org'>public-tt@w3.org</a> (publicly
+archived). The <a href='ThisIsCoffee61_captions.xml'>DFXP source
+code</a> is of course available. A screencast of the video is <a
+href='http://www.youtube.com/watch?v=KIYedYzmAYw'>available on
+Youtube</a> (without sound). </p>
+
+<p><strong>Note:</strong> this demonstration uses the HTML 5 video
+element, its media API, and a totally unconventional <code>&lt;text&gt;</code> element.</p>
+
+<div style='margin-top: 2em; margin-right: 5%;'>
+  <video controls="true" width="320px" height='240px' style='margin-right: 5%;'>
+    <source src="http://media.w3.org/2009/02/ThisisCo1961_tiny.ogv" type="video/ogg; codecs=&quot;theora, vorbis&quot;" />
+    <source src="http://media.w3.org/2009/02/ThisisCo1961_tiny.mp4" type="video/mp4; codecs=&quot;avc1.42E01E, mp4a.40.2&quot;"/>
+    <text lang='en' type="application/ttaf+xml" src="ThisIsCoffee61_captions.xml"></text>
+  </video>
+
+<script>
+  init_captions();
+    </script>
+
+</div>
+
+</body>
+</html>

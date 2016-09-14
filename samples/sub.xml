@@ -1,0 +1,105 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<tt xmlns = "http://www.w3.org/ns/ttml"
+    xmlns:tts="http://www.w3.org/ns/ttml#styling"
+    xmlns:ttm="http://www.w3.org/ns/ttml#metadata">
+	<head>
+		<metadata xmlns:ttm = "http://www.w3.org/ns/ttml#metadata">
+			<ttm:title>Timed Text TTML Example</ttm:title>
+			<ttm:copyright>The Authors(c) 2006</ttm:copyright>
+		</metadata>
+		<layout>
+		  
+	<region xml:id="overlay" tts:textAlign='center' tts:origin="0px 0px" tts:extent="320px 240px" tts:opacity='0.9'
+		tts:backgroundColor="white"  tts:color='black' tts:fontSize='150%'/>
+	<region xml:id="r1" tts:origin="40px 30px" tts:fontSize='24pt'  />
+	<region xml:id="r2" tts:origin="120px 30px" tts:fontSize='24pt'  />
+	<region xml:id="r3" tts:origin="200px 30px" tts:fontSize='24pt'  />
+	<region xml:id="r4" tts:origin="280px 30px" tts:fontSize='24pt'  />
+	<region xml:id="r5" tts:origin="40px 90px" tts:fontSize='24pt'  />
+	<region xml:id="r6" tts:origin="120px 90px" tts:fontSize='24pt'  />
+	<region xml:id="r7" tts:origin="200px 90px" tts:fontSize='24pt'  />
+	<region xml:id="r8" tts:origin="280px 90px" tts:fontSize='24pt'  />
+	<region xml:id="r9" tts:origin="40px 150px" tts:fontSize='24pt'  />
+	<region xml:id="r10" tts:origin="120px 150px" tts:fontSize='24pt'  />
+	<region xml:id="r11" tts:origin="200px 150px" tts:fontSize='24pt'  />
+	<region xml:id="r12" tts:origin="280px 150px" tts:fontSize='24pt'  />
+	<region xml:id="r13" tts:origin="40px 210px" tts:fontSize='24pt'  />
+	<region xml:id="r14" tts:origin="120px 210px" tts:fontSize='24pt'  />
+	<region xml:id="r15" tts:origin="200px 210px" tts:fontSize='24pt'  />
+	<region xml:id="r16" tts:origin="280px 210px" tts:fontSize='24pt'  />
+		  
+
+		  <!--
+	<region xml:id="r1" tts:origin="25% 25%" tts:fontSize='24pt'  />
+	<region xml:id="r2" tts:origin="25% 75%" tts:fontSize='24pt'  />
+	<region xml:id="r3" tts:origin="75% 25%" tts:fontSize='24pt'  />
+	<region xml:id="r4" tts:origin="75% 75%" tts:fontSize='24pt'  />
+		  -->
+		  
+      </layout>
+	</head>
+	<body>
+		<div>
+			<p begin="00:00:00.00" end="00:00:02.00">
+				<data type="text/plain; charset = us-ascii">
+					<metadata faceID="0"></metadata>
+					<chunk xml:id="Brow Raised Left">0</chunk>
+					<chunk xml:id="Brow Raised Right">0</chunk>
+					<chunk xml:id="Brow Lowered Left">0</chunk>
+					<chunk xml:id="Brow Lowered Right">0</chunk>
+					<chunk xml:id="Smile">0</chunk>
+					<chunk xml:id="Kiss">0</chunk>
+					<chunk xml:id="Mouth Open">0</chunk>
+					<chunk xml:id="Closed Eye Left">0</chunk>
+					<chunk xml:id="Closed Eye Right">0</chunk>
+					<chunk xml:id="Eyes Turn Left">0</chunk>
+					<chunk xml:id="Eyes Turn Right">0</chunk>
+					<chunk xml:id="Eyes Up">100</chunk>
+					<chunk xml:id="Eyes Down">0</chunk>
+					<chunk xml:id="Tongue Out">0</chunk>
+					<chunk xml:id="Puff Right Cheek">0</chunk>
+					<chunk xml:id="Puff Left Cheek">0</chunk>
+				</data>
+				Some emotion
+			</p>
+			<!--
+			<p tts:origin="40px 30px" tts:fontSize='24pt'  begin="00:00:02.00" end="00:00:02.15">
+			  +
+			</p>
+			<p tts:origin="200px 130px" tts:fontSize='24pt'  begin="00:00:02.00" end="00:00:12.15">
+			  +
+			</p>
+			<p tts:origin="140px 230px" tts:fontSize='24pt'  begin="00:00:12.00" end="00:00:22.15">
+			  +
+			  </p>
+			-->
+			<p begin="00:00:02.00" end="00:00:12.15">
+			  <span tts:extent="320px 240px" tts:origin="50% 50%" tts:fontSize='24pt'  >+</span>
+			</p>
+			<p begin="00:00:12.00" end="00:00:22.15">
+			  <span tts:origin="200px 130px" tts:fontSize='24pt' >+</span>
+			</p>
+			<p region="r4" begin="00:00:22.00" end="00:00:32.15">
+			  +
+			</p>
+			<p region="r3" begin="00:00:32.00" end="00:00:42.15">
+			  +
+			</p>
+			<p region="r2" begin="00:00:42.00" end="00:00:52.15">
+			  +
+			</p>
+			<p region="r1" begin="00:00:52.00" end="00:01:02.15">
+			  +
+			</p>
+			<p region="r4" begin="00:01:02.00" end="00:01:12.15">
+			  +
+			</p>
+			<p region="r1" begin="00:01:12.00" end="00:01:22.15">
+			  +
+			</p>
+			<p region="r3" begin="00:01:22.00" end="00:01:32.15">
+			  +
+			</p>
+		</div>
+	</body>
+</tt>
