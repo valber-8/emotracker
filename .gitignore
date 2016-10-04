@@ -210,4 +210,5 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
-/DF_FaceTracking_vs2015.VC.VC.opendb
+/emotracker/DF_FaceTracking_vs2015.VC.VC.opendb
+/rssdk2video/rssdk2video.VC.opendb

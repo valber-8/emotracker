@@ -25,6 +25,7 @@ private:
 	bool m_unregisterFlag;
 	clock_t starttime;
 	double prevtime;
+	int framenum;
 
 	PXCFaceData* m_output;
 	PXCPersonTrackingData* m_poutput;
