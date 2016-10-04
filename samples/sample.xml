@@ -1,0 +1,39 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<tt xmlns = "http://www.w3.org/ns/ttml" xmlns:tts = "http://www.w3.org/ns/ttml#styling" xmlns:ttm = "http://www.w3.org/ns/ttml#metadata" >
+	<head>
+		<metadata xmlns:ttm = "http://www.w3.org/ns/ttml#metadata">
+			<ttm:title>Timed Text TTML Example</ttm:title>
+			<ttm:copyright>The Authors(c) 2006</ttm:copyright>
+		</metadata>
+	</head>
+	<body>
+		<div>
+			<p begin="00:00:00.00" end="00:00:03.10">
+			</p>
+			<p begin="00:00:10.00" end="00:02:03.15">
+				<data type="text/plain; charset = us-ascii">
+					<metadata faceID="0"></metadata>
+					//<![CDATA[
+					<Brow_Raised_Left>0</>
+					<Brow_Raised_Right>0</>
+					<Brow_Lowered_Left>0</>
+					<Brow_Lowered_Right>0</>
+					<Smile>0</>
+					<Kiss>0</>
+					<Mouth_Open>0</>
+					<Closed_Eye_Left>0</>
+					<Closed_Eye_Right>0</>
+					<Eyes_Turn_Left>0</>
+					<Eyes_Turn_Right>0</>
+					<Eyes_Up>0</>
+					<Eyes_Down>100</>
+					<Tongue_Out>0</>
+					<Puff_Right_Cheek>0</>
+					<Puff_Left_Cheek>0</>					
+					//]]>
+				</data>
+				<span  tts:origin="50% 50%">+</span>
+			</p>
+		</div>
+	</body>
+</tt>	
