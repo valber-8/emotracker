@@ -12,6 +12,7 @@ namespace EmoTracker
 {
     public partial class Form1 : Form
     {
+        bool Running = false;
         public Form1()
         {
             InitializeComponent();
@@ -67,6 +68,29 @@ namespace EmoTracker
             //разворачиваем окно
             WindowState = FormWindowState.Normal;
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (!Running)
+            {
+                button1.Text = "Stop";
+                stopToolStripMenuItem.Enabled = true;
+                startToolStripMenuItem.Enabled = false;
+                Running = true;
+            }
+            else
+            {
+                button1.Text = "Start";
+                stopToolStripMenuItem.Enabled = false;
+                startToolStripMenuItem.Enabled = true;
+                Running = false;
+            }
+        }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

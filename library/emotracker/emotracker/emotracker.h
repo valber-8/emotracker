@@ -26,14 +26,18 @@
 
 //namespace emotracker
 //{
-	class EmotionsConfiguration {
+	class EMOTRACKER_API EmotionsConfiguration {
 	public:
 		pxcCHAR *calibFilename;
 		pxcCHAR *streamFilename;
 		pxcCHAR *emoFilename;
+		EmotionsConfiguration();
+		void setStreamFilename(pxcCHAR *streamFilename);
+		void setCalibrationFilename(pxcCHAR *calibFilename);
+		void setEmotionsFilename(pxcCHAR *emoFilename);
 
 	};
-	class EmotionsData {
+	class EMOTRACKER_API EmotionsData {
 		pxcI64 timestamp;
 		pxcI32 ID;
 
@@ -70,8 +74,8 @@
 		pxcI32 Contempt;
 
 		pxcI32 pulse;
-	};
-	class EmotionsTracker {
+	}; 
+	class EMOTRACKER_API  EmotionsTracker {
 	private:
 		PXCSenseManager* m_sm;
 		PXCFaceData* m_face;
@@ -89,6 +93,7 @@
 		pxcStatus WriteEmo();
 	public:
 		EmotionsTracker();
+		~EmotionsTracker();
 		EmotionsTracker(PXCSenseManager *m_sm);
 		pxcStatus Init();
 		pxcStatus ProcessFrame();
@@ -105,7 +110,7 @@
 
 
 	};
-	class EmotionsHandler : public PXCSenseManager::Handler
+	class EMOTRACKER_API EmotionsHandler : public PXCSenseManager::Handler
 	{
 		EmotionsTracker *m_etr;
 	public:
