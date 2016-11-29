@@ -7,12 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CSharpLibrary;
 
 namespace EmoTracker
 {
     public partial class Form1 : Form
     {
         bool Running = false;
+        Emotracker.EmotionsTracker etr;
         public Form1()
         {
             InitializeComponent();
@@ -74,6 +76,15 @@ namespace EmoTracker
         {
             if (!Running)
             {
+
+                etr = new Emotracker.EmotionsTracker();
+                Emotracker.EmotionsConfiguration conf = etr.QueryConfiguration();
+                conf.setCalibrationFilename("calib.bin");
+                conf.setEmotionsFilename("1.ttml");
+                conf.setStreamFilename("1.rssdk");
+                //etr.Init();
+                etr.Start();
+
                 button1.Text = "Stop";
                 stopToolStripMenuItem.Enabled = true;
                 startToolStripMenuItem.Enabled = false;
@@ -81,6 +92,9 @@ namespace EmoTracker
             }
             else
             {
+                etr.Stop();
+                //etr.Release();
+
                 button1.Text = "Start";
                 stopToolStripMenuItem.Enabled = false;
                 startToolStripMenuItem.Enabled = true;

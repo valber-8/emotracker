@@ -75,6 +75,7 @@
 
 		pxcI32 pulse;
 	}; 
+
 	class EMOTRACKER_API  EmotionsTracker {
 	private:
 		PXCSenseManager* m_sm;
@@ -85,8 +86,9 @@
 		clock_t starttime;
 		double prevtime;
 		int framenum;
-		BOOL stop_thread;
+		volatile BOOL stop_thread;
 		LPDWORD lpThreadId;
+		HANDLE thread;
 		std::map<PXCFaceData::ExpressionsData::FaceExpression, std::wstring> m_expressionMap;
 
 		std::map<PXCFaceData::ExpressionsData::FaceExpression, std::wstring> InitExpressionsMap();
@@ -99,17 +101,14 @@
 		pxcStatus ProcessFrame();
 		pxcStatus ProcessSample(PXCCapture::Sample *sample);
 		pxcStatus SetOutputURL(pxcCHAR *url);
-		EmotionsConfiguration *QueryConfiguration();
+		EmotionsConfiguration* QueryConfiguration();
 		EmotionsData *QueryOutput();
 		pxcStatus Start();
 		pxcStatus Stop();
 		pxcStatus Release();
 		void Process();
-
-
-
-
 	};
+
 	class EMOTRACKER_API EmotionsHandler : public PXCSenseManager::Handler
 	{
 		EmotionsTracker *m_etr;
