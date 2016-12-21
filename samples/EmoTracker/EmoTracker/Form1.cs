@@ -79,11 +79,15 @@ namespace EmoTracker
 
                 etr = new Emotracker.EmotionsTracker();
                 Emotracker.EmotionsConfiguration conf = etr.QueryConfiguration();
-                conf.setCalibrationFilename("calib.bin");
-                conf.setEmotionsFilename("1.ttml");
-                conf.setStreamFilename("1.rssdk");
+                if (textBox1.Text!="") conf.setCalibrationFilename(textBox1.Text);
+                else conf.setCalibrationFilename("calib.bin");
+                if (textBox3.Text != "") conf.setEmotionsFilename(textBox3.Text);
+                else conf.setEmotionsFilename("1.ttml");
+                if (textBox2.Text != "") conf.setStreamFilename(textBox2.Text);
+                else conf.setStreamFilename("1.rssdk");
                 //etr.Init();
-                etr.Start();
+                pxcmStatus status = etr.Start();
+                toolStripStatusLabel1.Text = status.ToString();
 
                 button1.Text = "Stop";
                 stopToolStripMenuItem.Enabled = true;
@@ -92,7 +96,8 @@ namespace EmoTracker
             }
             else
             {
-                etr.Stop();
+                pxcmStatus status = etr.Stop();
+                toolStripStatusLabel1.Text = status.ToString();
                 //etr.Release();
 
                 button1.Text = "Start";
@@ -105,6 +110,37 @@ namespace EmoTracker
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+            openFileDialog1.Filter = "calibration files (*.bin)|*.bin|All files (*.*)|*.*";
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                textBox1.Text = openFileDialog1.FileName;
+            else
+                toolStripStatusLabel1.Text = "Open calibration file failed";
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1.Filter = "rssdk files (*.rssdk)|*.rssdk|All files (*.*)|*.*";
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                textBox2.Text = saveFileDialog1.FileName;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog2 = new SaveFileDialog();
+            saveFileDialog2.Filter = "ttml files (*.ttml)|*.ttml|All files (*.*)|*.*";
+            if (saveFileDialog2.ShowDialog() == DialogResult.OK)
+                textBox3.Text = saveFileDialog2.FileName;
         }
     }
 }
