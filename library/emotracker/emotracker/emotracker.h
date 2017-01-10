@@ -24,8 +24,9 @@
 #include "pxccapture.h"
 #include <time.h>
 
-//namespace emotracker
-//{
+/**
+
+*/
 	class EMOTRACKER_API EmotionsConfiguration {
 	public:
 		pxcCHAR *calibFilename;
@@ -116,4 +117,3 @@
 		EmotionsHandler(EmotionsTracker *etr);
 		virtual pxcStatus PXCAPI OnNewSample(pxcUID, PXCCapture::Sample *sample);
 	};
-//}
