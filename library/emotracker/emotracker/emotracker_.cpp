@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "emotracker_.h"
 
-
 EmotionsConfiguration* CreateEmotionsConfiguration() {
 	return new EmotionsConfiguration();
 }
@@ -30,6 +29,39 @@ void EmotionsConfiguration_setEmotionsFilename(EmotionsConfiguration* a_pObject,
 		a_pObject->setEmotionsFilename(emoFilename);
 	}
 }
+
+
+void EmotionsConfiguration_setPersonTracking(EmotionsConfiguration* a_pObject, pxcBool personTracking) {
+	if (a_pObject != NULL)
+	{
+		a_pObject->setPersonTracking(personTracking);
+	}
+}
+void EmotionsConfiguration_setAddGazePoint(EmotionsConfiguration* a_pObject, pxcBool addGazePoint) {
+	if (a_pObject != NULL)
+	{
+		a_pObject->setAddGazePoint(addGazePoint);
+	}
+}
+void EmotionsConfiguration_setRecordingLandmark(EmotionsConfiguration* a_pObject, pxcBool recordingLandmark) {
+	if (a_pObject != NULL)
+	{
+		a_pObject->setRecordingLandmark(recordingLandmark);
+	}
+}
+void EmotionsConfiguration_setRecordingGaze(EmotionsConfiguration* a_pObject, pxcBool recordingGaze) {
+	if (a_pObject != NULL)
+	{
+		a_pObject->setRecordingGaze(recordingGaze);
+	}
+}
+void EmotionsConfiguration_setUsePersonTrackingModuleEmotions(EmotionsConfiguration* a_pObject, pxcBool usePersonTrackingModuleEmotions) {
+	if (a_pObject != NULL)
+	{
+		a_pObject->setUsePersonTrackingModuleEmotions(usePersonTrackingModuleEmotions);
+	}
+}
+
 
 
 EmotionsData* CreateEmotionsData()

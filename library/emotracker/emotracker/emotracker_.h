@@ -11,6 +11,12 @@ extern "C" {
 	extern EMOTRACKER_API void EmotionsConfiguration_setCalibrationFilename(EmotionsConfiguration* a_pObject, pxcCHAR *calibFilename);
 	extern EMOTRACKER_API void EmotionsConfiguration_setEmotionsFilename(EmotionsConfiguration* a_pObject, pxcCHAR *emoFilename);
 
+	extern EMOTRACKER_API void EmotionsConfiguration_setPersonTracking(EmotionsConfiguration* a_pObject, pxcBool personTracking);
+	extern EMOTRACKER_API void EmotionsConfiguration_setAddGazePoint(EmotionsConfiguration* a_pObject, pxcBool addGazePoint);
+	extern EMOTRACKER_API void EmotionsConfiguration_setRecordingLandmark(EmotionsConfiguration* a_pObject, pxcBool recordingLandmark);
+	extern EMOTRACKER_API void EmotionsConfiguration_setRecordingGaze(EmotionsConfiguration* a_pObject, pxcBool recordingGaze);
+	extern EMOTRACKER_API void EmotionsConfiguration_setUsePersonTrackingModuleEmotions(EmotionsConfiguration* a_pObject, pxcBool usePersonTrackingModuleEmotions);
+	
 	extern EMOTRACKER_API EmotionsData* CreateEmotionsData();
 	extern EMOTRACKER_API void DisposeEmotionsData(EmotionsData* a_pObject);
 

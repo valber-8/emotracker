@@ -86,6 +86,8 @@ namespace EmoTracker
                 if (textBox2.Text != "") conf.setStreamFilename(textBox2.Text);
                 else conf.setStreamFilename("1.rssdk");
                 //etr.Init();
+                conf.setPersonTracking(checkBox1.Checked);
+
                 pxcmStatus status = etr.Start();
                 toolStripStatusLabel1.Text = status.ToString();
 
@@ -141,6 +143,11 @@ namespace EmoTracker
             saveFileDialog2.Filter = "ttml files (*.ttml)|*.ttml|All files (*.*)|*.*";
             if (saveFileDialog2.ShowDialog() == DialogResult.OK)
                 textBox3.Text = saveFileDialog2.FileName;
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

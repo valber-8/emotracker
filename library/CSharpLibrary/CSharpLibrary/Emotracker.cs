@@ -17,6 +17,14 @@ namespace CSharpLibrary
 		    String calibFilename;
             String streamFilename;
             String emoFilename;
+
+            Boolean personTracking = true;
+            Boolean addGazePoint = true;
+            Boolean recordingLandmark = true;
+            Boolean recordingGaze = true;
+            Boolean usePersonTrackingModuleEmotions = false;
+
+
             IntPtr pClassName;
 
             [DllImport(DLLNAME, CharSet = CharSet.Unicode)]
@@ -57,6 +65,56 @@ namespace CSharpLibrary
                 this.emoFilename = emoFilename;
             }
 
+
+            /**
+            <param name="personTracking">Provides ability to collect person tracking data. By default is <b>true</b></param>
+            */
+            [DllImport(DLLNAME, CharSet = CharSet.Unicode)]
+            internal static extern void EmotionsConfiguration_setPersonTracking(IntPtr pClassName, Boolean personTracking);
+            public void setPersonTracking(Boolean personTracking)
+            {
+                EmotionsConfiguration_setPersonTracking(pClassName, personTracking);
+                this.personTracking = personTracking;
+            }
+
+            /**
+            <param name="addGazePoint">Provides ability to write gaze point to the subtitles in output ttml file. By default is <b>true</b></param>
+            */
+
+            [DllImport(DLLNAME, CharSet = CharSet.Unicode)]
+            internal static extern void EmotionsConfiguration_setAddGazePoint(IntPtr pClassName, Boolean addGazePoint);
+            public void setAddGazePoint(Boolean addGazePoint)
+            {
+                EmotionsConfiguration_setAddGazePoint(pClassName, addGazePoint);
+                this.addGazePoint = addGazePoint;
+            }
+            /**
+            <param name="recordingLandmark">Provides ability to collect landmark data. By default is <b>true</b></param>
+            */
+            [DllImport(DLLNAME, CharSet = CharSet.Unicode)]
+            internal static extern void EmotionsConfiguration_setRecordingLandmark(IntPtr pClassName, Boolean recordingLandmark);
+            public void setRecordingLandmark(Boolean recordingLandmark)
+            {
+                EmotionsConfiguration_setRecordingLandmark(pClassName, recordingLandmark);
+                this.recordingLandmark = recordingLandmark;
+            }
+            /**
+            <param name="recordingGaze">Provides ability to collect gaze data. By default is <b>true</b></param>
+            */
+            [DllImport(DLLNAME, CharSet = CharSet.Unicode)]
+            internal static extern void EmotionsConfiguration_setRecordingGaze(IntPtr pClassName, Boolean recordingGaze);
+            public void setRecordingGaze(Boolean recordingGaze)
+            {
+                EmotionsConfiguration_setRecordingGaze(pClassName, recordingGaze);
+                this.recordingGaze = recordingGaze;
+            }
+            [DllImport(DLLNAME, CharSet = CharSet.Unicode)]
+            internal static extern void EmotionsConfiguration_setUsePersonTrackingModuleEmotions(IntPtr pClassName, Boolean usePersonTrackingModuleEmotions);
+            public void setUsePersonTrackingModuleEmotions(Boolean usePersonTrackingModuleEmotions)
+            {
+                EmotionsConfiguration_setUsePersonTrackingModuleEmotions(pClassName, usePersonTrackingModuleEmotions);
+                this.usePersonTrackingModuleEmotions = usePersonTrackingModuleEmotions;
+            }
         }
 
 

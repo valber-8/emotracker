@@ -1,0 +1,96 @@
+\hypertarget{class_emotions_tracker}{}\section{Emotions\+Tracker Class Reference}
+\label{class_emotions_tracker}\index{Emotions\+Tracker@{Emotions\+Tracker}}
+
+
+Class for providing the driver to process data from camera  
+
+
+
+
+{\ttfamily \#include $<$emotracker.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_emotions_tracker_afb06d6882dd40a40b94ce3579769ae2c}\label{class_emotions_tracker_afb06d6882dd40a40b94ce3579769ae2c}} 
+\hyperlink{class_emotions_tracker_afb06d6882dd40a40b94ce3579769ae2c}{Emotions\+Tracker} ()
+\begin{DoxyCompactList}\small\item\em Constructor \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_emotions_tracker_ab4cf40eb06b6b4728053bb6d143821df}\label{class_emotions_tracker_ab4cf40eb06b6b4728053bb6d143821df}} 
+\hyperlink{class_emotions_tracker_ab4cf40eb06b6b4728053bb6d143821df}{$\sim$\+Emotions\+Tracker} ()
+\begin{DoxyCompactList}\small\item\em Destructor \end{DoxyCompactList}\item 
+\hyperlink{class_emotions_tracker_a3fe760d853d9f56830ad241cfea10aeb}{Emotions\+Tracker} (P\+X\+C\+Sense\+Manager $\ast$m\+\_\+sm)
+\begin{DoxyCompactList}\small\item\em Constructor with \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_emotions_tracker_a83fa504b5116e572602868df1cd77f6f}\label{class_emotions_tracker_a83fa504b5116e572602868df1cd77f6f}} 
+pxc\+Status \hyperlink{class_emotions_tracker_a83fa504b5116e572602868df1cd77f6f}{Init} ()
+\begin{DoxyCompactList}\small\item\em Initialize driver \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_emotions_tracker_a80001215d863892367d69fe4325fb41b}\label{class_emotions_tracker_a80001215d863892367d69fe4325fb41b}} 
+pxc\+Status \hyperlink{class_emotions_tracker_a80001215d863892367d69fe4325fb41b}{Process\+Frame} ()
+\begin{DoxyCompactList}\small\item\em Process captured frame \end{DoxyCompactList}\item 
+pxc\+Status \hyperlink{class_emotions_tracker_ae0ab90b095ae541d2129b0d470f7d7ff}{Process\+Sample} (P\+X\+C\+Capture\+::\+Sample $\ast$sample)
+\begin{DoxyCompactList}\small\item\em Process frame sample \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_emotions_tracker_a7a83b4e6d753fd13d541afde8d550783}\label{class_emotions_tracker_a7a83b4e6d753fd13d541afde8d550783}} 
+pxc\+Status \hyperlink{class_emotions_tracker_a7a83b4e6d753fd13d541afde8d550783}{Set\+Output\+U\+RL} (pxc\+C\+H\+AR $\ast$url)
+\begin{DoxyCompactList}\small\item\em Set U\+RL to write ttml output \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_emotions_tracker_a0ce7070b0331662358fcefde44b22441}\label{class_emotions_tracker_a0ce7070b0331662358fcefde44b22441}} 
+\hyperlink{class_emotions_configuration}{Emotions\+Configuration} $\ast$ \hyperlink{class_emotions_tracker_a0ce7070b0331662358fcefde44b22441}{Query\+Configuration} ()
+\begin{DoxyCompactList}\small\item\em Get emotions configuration class instance \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_emotions_tracker_a097d4ff8db0b4ca330bec36e2343ff73}\label{class_emotions_tracker_a097d4ff8db0b4ca330bec36e2343ff73}} 
+\hyperlink{class_emotions_data}{Emotions\+Data} $\ast$ \hyperlink{class_emotions_tracker_a097d4ff8db0b4ca330bec36e2343ff73}{Query\+Output} ()
+\begin{DoxyCompactList}\small\item\em Get curently collected emotions data \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_emotions_tracker_a054e0ccebc638d54b6deb1ec60f660e3}\label{class_emotions_tracker_a054e0ccebc638d54b6deb1ec60f660e3}} 
+pxc\+Status \hyperlink{class_emotions_tracker_a054e0ccebc638d54b6deb1ec60f660e3}{Start} ()
+\begin{DoxyCompactList}\small\item\em Start processing camera stream \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_emotions_tracker_a7b78dbd1a9ddc028b2c7ada76d5c42e5}\label{class_emotions_tracker_a7b78dbd1a9ddc028b2c7ada76d5c42e5}} 
+pxc\+Status \hyperlink{class_emotions_tracker_a7b78dbd1a9ddc028b2c7ada76d5c42e5}{Stop} ()
+\begin{DoxyCompactList}\small\item\em Stop processing camera stream \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_emotions_tracker_adf4a570762e9f01338acbfd9f41ce1b6}\label{class_emotions_tracker_adf4a570762e9f01338acbfd9f41ce1b6}} 
+pxc\+Status \hyperlink{class_emotions_tracker_adf4a570762e9f01338acbfd9f41ce1b6}{Release} ()
+\begin{DoxyCompactList}\small\item\em Release used memory \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_emotions_tracker_a49efddf4954f06dd0c1b78bc84a7f12d}\label{class_emotions_tracker_a49efddf4954f06dd0c1b78bc84a7f12d}} 
+void \hyperlink{class_emotions_tracker_a49efddf4954f06dd0c1b78bc84a7f12d}{Process} ()
+\begin{DoxyCompactList}\small\item\em Process camera stream \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class for providing the driver to process data from camera 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_emotions_tracker_a3fe760d853d9f56830ad241cfea10aeb}\label{class_emotions_tracker_a3fe760d853d9f56830ad241cfea10aeb}} 
+\index{Emotions\+Tracker@{Emotions\+Tracker}!Emotions\+Tracker@{Emotions\+Tracker}}
+\index{Emotions\+Tracker@{Emotions\+Tracker}!Emotions\+Tracker@{Emotions\+Tracker}}
+\subsubsection{\texorpdfstring{Emotions\+Tracker()}{EmotionsTracker()}}
+{\footnotesize\ttfamily Emotions\+Tracker\+::\+Emotions\+Tracker (\begin{DoxyParamCaption}\item[{P\+X\+C\+Sense\+Manager $\ast$}]{m\+\_\+sm }\end{DoxyParamCaption})}
+
+
+
+Constructor with 
+
+
+\begin{DoxyParams}{Parameters}
+{\em m\+\_\+sm} & Provides ability to setup initial sense manager\\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_emotions_tracker_ae0ab90b095ae541d2129b0d470f7d7ff}\label{class_emotions_tracker_ae0ab90b095ae541d2129b0d470f7d7ff}} 
+\index{Emotions\+Tracker@{Emotions\+Tracker}!Process\+Sample@{Process\+Sample}}
+\index{Process\+Sample@{Process\+Sample}!Emotions\+Tracker@{Emotions\+Tracker}}
+\subsubsection{\texorpdfstring{Process\+Sample()}{ProcessSample()}}
+{\footnotesize\ttfamily pxc\+Status Emotions\+Tracker\+::\+Process\+Sample (\begin{DoxyParamCaption}\item[{P\+X\+C\+Capture\+::\+Sample $\ast$}]{sample }\end{DoxyParamCaption})}
+
+
+
+Process frame sample 
+
+
+\begin{DoxyParams}{Parameters}
+{\em sample} & Captured sample\\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+library/emotracker/emotracker/emotracker.\+h\item 
+library/emotracker/emotracker/emotracker.\+cpp\end{DoxyCompactItemize}
