@@ -145,11 +145,11 @@ namespace EmoMerge
         private void button3_Click(object sender, EventArgs e)
         {
             String outputFilename;
-            if (!File.Exists(textBox1.Text)) {
+            if (!File.Exists(mergeFirstFileTextBox.Text)) {
                 toolStripStatusLabel1.Text = "The first file is not exist";
                 return;
             }
-            if (!File.Exists(textBox2.Text))
+            if (!File.Exists(mergeSecondFileTextBox.Text))
             {
                 toolStripStatusLabel1.Text = "The second file is not exist";
                 return;
@@ -164,8 +164,8 @@ namespace EmoMerge
                 return;
             }
 
-            FileStream first = File.OpenRead(textBox1.Text);
-            FileStream second = File.OpenRead(textBox2.Text);
+            FileStream first = File.OpenRead(mergeFirstFileTextBox.Text);
+            FileStream second = File.OpenRead(mergeSecondFileTextBox.Text);
             FileStream output = File.Open(outputFilename,FileMode.Create,FileAccess.Write);
             toolStripStatusLabel1.Text = "Process...";
             try
@@ -187,7 +187,7 @@ namespace EmoMerge
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
             openFileDialog1.Filter = "ttml files (*.ttml)|*.ttml|All files (*.*)|*.*";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                textBox1.Text = openFileDialog1.FileName;
+                mergeFirstFileTextBox.Text = openFileDialog1.FileName;
             else
                 toolStripStatusLabel1.Text = "Open first file failed";
         }
@@ -198,7 +198,7 @@ namespace EmoMerge
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
             openFileDialog1.Filter = "ttml files (*.ttml)|*.ttml|All files (*.*)|*.*";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                textBox2.Text = openFileDialog1.FileName;
+                mergeSecondFileTextBox.Text = openFileDialog1.FileName;
             else
                 toolStripStatusLabel1.Text = "Open second file failed";
 
@@ -210,7 +210,7 @@ namespace EmoMerge
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
             openFileDialog1.Filter = "ttml files (*.ttml)|*.ttml|All files (*.*)|*.*";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                textBox6.Text = openFileDialog1.FileName;
+                averageFilenameTextBox.Text = openFileDialog1.FileName;
             else
                 toolStripStatusLabel1.Text = "Open file failed";
         }
@@ -320,7 +320,7 @@ namespace EmoMerge
         {
 
             String outputFilename;
-            if (!File.Exists(textBox6.Text))
+            if (!File.Exists(averageFilenameTextBox.Text))
             {
                 toolStripStatusLabel1.Text = "File is not exist";
                 return;
@@ -335,7 +335,7 @@ namespace EmoMerge
                 return;
             }
 
-            FileStream first = File.OpenRead(textBox6.Text);
+            FileStream first = File.OpenRead(averageFilenameTextBox.Text);
             FileStream output = File.Open(outputFilename, FileMode.Create, FileAccess.Write);
             toolStripStatusLabel1.Text = "Process...";
             //try
@@ -458,7 +458,7 @@ namespace EmoMerge
         {
 
             String outputFilename;
-            if (!File.Exists(textBox6.Text))
+            if (!File.Exists(averageFilenameTextBox.Text))
             {
                 toolStripStatusLabel1.Text = "File is not exist";
                 return;
@@ -473,12 +473,12 @@ namespace EmoMerge
                 return;
             }
 
-            FileStream first = File.OpenRead(textBox6.Text);
+            FileStream first = File.OpenRead(averageFilenameTextBox.Text);
             FileStream output = File.Open(outputFilename, FileMode.Create, FileAccess.Write);
             toolStripStatusLabel1.Text = "Process...";
             //try
             //{
-            int interval = Convert.ToInt32(textBox4.Text);
+            int interval = Convert.ToInt32(smoothIntervalTextBox.Text);
             Smooth(first, output, interval);
             //}
             //catch 

@@ -33,22 +33,22 @@
             this.button3 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.mergeSecondFileTextBox = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.mergeFirstFileTextBox = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.label4 = new System.Windows.Forms.Label();
-            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.smoothIntervalTextBox = new System.Windows.Forms.TextBox();
             this.button5 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.smoothFilenameTextBox = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.button6 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
-            this.textBox6 = new System.Windows.Forms.TextBox();
+            this.averageFilenameTextBox = new System.Windows.Forms.TextBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.tabControl1.SuspendLayout();
@@ -74,10 +74,10 @@
             this.tabPage1.Controls.Add(this.button3);
             this.tabPage1.Controls.Add(this.button2);
             this.tabPage1.Controls.Add(this.label2);
-            this.tabPage1.Controls.Add(this.textBox2);
+            this.tabPage1.Controls.Add(this.mergeSecondFileTextBox);
             this.tabPage1.Controls.Add(this.button1);
             this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Controls.Add(this.textBox1);
+            this.tabPage1.Controls.Add(this.mergeFirstFileTextBox);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -116,13 +116,13 @@
             this.label2.Text = "Second file:";
             this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
-            // textBox2
+            // mergeSecondFileTextBox
             // 
-            this.textBox2.Location = new System.Drawing.Point(62, 36);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(131, 20);
-            this.textBox2.TabIndex = 3;
-            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
+            this.mergeSecondFileTextBox.Location = new System.Drawing.Point(62, 36);
+            this.mergeSecondFileTextBox.Name = "mergeSecondFileTextBox";
+            this.mergeSecondFileTextBox.Size = new System.Drawing.Size(131, 20);
+            this.mergeSecondFileTextBox.TabIndex = 3;
+            this.mergeSecondFileTextBox.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
             // button1
             // 
@@ -143,21 +143,21 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "First file:";
             // 
-            // textBox1
+            // mergeFirstFileTextBox
             // 
-            this.textBox1.Location = new System.Drawing.Point(62, 10);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(132, 20);
-            this.textBox1.TabIndex = 0;
+            this.mergeFirstFileTextBox.Location = new System.Drawing.Point(62, 10);
+            this.mergeFirstFileTextBox.Name = "mergeFirstFileTextBox";
+            this.mergeFirstFileTextBox.Size = new System.Drawing.Size(132, 20);
+            this.mergeFirstFileTextBox.TabIndex = 0;
             // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.label4);
-            this.tabPage2.Controls.Add(this.textBox4);
+            this.tabPage2.Controls.Add(this.smoothIntervalTextBox);
             this.tabPage2.Controls.Add(this.button5);
             this.tabPage2.Controls.Add(this.button4);
             this.tabPage2.Controls.Add(this.label3);
-            this.tabPage2.Controls.Add(this.textBox3);
+            this.tabPage2.Controls.Add(this.smoothFilenameTextBox);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -175,12 +175,12 @@
             this.label4.TabIndex = 9;
             this.label4.Text = "Smooth interval";
             // 
-            // textBox4
+            // smoothIntervalTextBox
             // 
-            this.textBox4.Location = new System.Drawing.Point(90, 50);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(100, 20);
-            this.textBox4.TabIndex = 8;
+            this.smoothIntervalTextBox.Location = new System.Drawing.Point(90, 50);
+            this.smoothIntervalTextBox.Name = "smoothIntervalTextBox";
+            this.smoothIntervalTextBox.Size = new System.Drawing.Size(100, 20);
+            this.smoothIntervalTextBox.TabIndex = 8;
             // 
             // button5
             // 
@@ -210,19 +210,19 @@
             this.label3.TabIndex = 4;
             this.label3.Text = "Filename:";
             // 
-            // textBox3
+            // smoothFilenameTextBox
             // 
-            this.textBox3.Location = new System.Drawing.Point(57, 10);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(133, 20);
-            this.textBox3.TabIndex = 3;
+            this.smoothFilenameTextBox.Location = new System.Drawing.Point(57, 10);
+            this.smoothFilenameTextBox.Name = "smoothFilenameTextBox";
+            this.smoothFilenameTextBox.Size = new System.Drawing.Size(133, 20);
+            this.smoothFilenameTextBox.TabIndex = 3;
             // 
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.button6);
             this.tabPage3.Controls.Add(this.button7);
             this.tabPage3.Controls.Add(this.label6);
-            this.tabPage3.Controls.Add(this.textBox6);
+            this.tabPage3.Controls.Add(this.averageFilenameTextBox);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
@@ -260,12 +260,12 @@
             this.label6.TabIndex = 4;
             this.label6.Text = "Filename:";
             // 
-            // textBox6
+            // averageFilenameTextBox
             // 
-            this.textBox6.Location = new System.Drawing.Point(57, 10);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(133, 20);
-            this.textBox6.TabIndex = 3;
+            this.averageFilenameTextBox.Location = new System.Drawing.Point(57, 10);
+            this.averageFilenameTextBox.Name = "averageFilenameTextBox";
+            this.averageFilenameTextBox.Size = new System.Drawing.Size(133, 20);
+            this.averageFilenameTextBox.TabIndex = 3;
             // 
             // statusStrip1
             // 
@@ -290,7 +290,7 @@
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.tabControl1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Emotions TTML merge utilities";
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
@@ -312,24 +312,24 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox mergeSecondFileTextBox;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox mergeFirstFileTextBox;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.TextBox smoothIntervalTextBox;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox smoothFilenameTextBox;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox textBox6;
+        private System.Windows.Forms.TextBox averageFilenameTextBox;
     }
 }
 

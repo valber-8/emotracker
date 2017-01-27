@@ -87,6 +87,7 @@ namespace EmoTracker
                 else conf.setStreamFilename("1.rssdk");
                 //etr.Init();
                 conf.setPersonTracking(checkBox1.Checked);
+                conf.setAddGazePoint(checkBox2.Checked);
 
                 pxcmStatus status = etr.Start();
                 toolStripStatusLabel1.Text = status.ToString();
