@@ -115,7 +115,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>libpxc_d.lib;opencv_core2413d.lib;opencv_imgproc2413d.lib;opencv_highgui2413d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\OpenCV\opencv\build\x86\vc12\lib;$(RSSDK_DIR)/lib/$(PlatformName)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OPENCV_DIR)/$(PlatformTarget)/vc12/lib;$(RSSDK_DIR)/lib/$(PlatformName)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -136,9 +136,11 @@
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
+      <AdditionalIncludeDirectories>$(RSSDK_DIR)/include;C:\OpenCV\opencv\build\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies />
+      <AdditionalDependencies>libpxc_d.lib;opencv_core2413d.lib;opencv_imgproc2413d.lib;opencv_highgui2413d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OPENCV_DIR)/$(PlatformTarget)/vc12/lib;$(RSSDK_DIR)/lib/$(PlatformName)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
