@@ -161,7 +161,9 @@
   <PropertyGroup>
     <PostBuildEvent>xcopy /y  "$(ProjectDir)..\..\..\library\emotracker\x64\$(ConfigurationName)\emotracker.dll" "$(ProjectDir)$(OutDir)"
 xcopy /y  "$(ProjectDir)..\..\..\library\emotracker\x64\$(ConfigurationName)\emotracker.pdb" "$(ProjectDir)$(OutDir)"
-xcopy /y "$(ProjectDir)..\calib.bin" "$(ProjectDir)$(OutDir)"</PostBuildEvent>
+xcopy /y "$(ProjectDir)..\calib.bin" "$(ProjectDir)$(OutDir)"
+xcopy /y "$(ProjectDir)..\calib.bin"  "$(SolutionDir)..\..\bin"
+xcopy /y  "$(ProjectDir)$(OutDir)$(TargetName)$(TargetExt)"  "$(SolutionDir)..\..\bin"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
