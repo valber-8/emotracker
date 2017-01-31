@@ -114,28 +114,22 @@ To build it you need:
 
 library/emotracker: 
 
-1.	Open emotracker.sln with Microsoft Visual Studio 2015 
-2.	Check path to RSSDK include directory 
-
-  a.	Project -> Properties
-  b.	C/C++ -> General -> Additional include path   it should contain RSSDK include path: $(RSSDK_DIR)/include
-
-3.	Check path to RSSDK libraries directory 
-
-  a.	Project -> Properties
-  b.	Linker -> General -> Additional library path it should contain RSSDK library path $(RSSDK_DIR)/lib/$(PlatformName)
-
-4.	Build and save the library emotracker.dll, under the local bin directory
+1. Open emotracker.sln with Microsoft Visual Studio 2015 
+2. Check path to RSSDK include directory 
+    a. Project -> Properties
+    b. C/C++ -> General -> Additional include path   it should contain RSSDK include path: $(RSSDK_DIR)/include
+3. Check path to RSSDK libraries directory 
+  a.  Project -> Properties
+  b.  Linker -> General -> Additional library path it should contain RSSDK library path $(RSSDK_DIR)/lib/$(PlatformName)
+4. Build and save the library emotracker.dll, under the local bin directory
 
 library/CSharpLibrary: 
 
-1.	Open CSharpLibrary.sln with Microsoft Visual Studio 2015 
-2.	Open the Solution Explorer (View -> Solution Explorer), expand Solution -> CSharpLibrary -> References and check if there is reference to the libpxcclr.cs  library
-
-  *	If not, then right click on the Reference -> Add reference… to open Reference manager 
-  *	Click Browse tab, and then Browse… button to find location of libpxcclr.cs.dll in your file system
-
-3.	Build and save the library CSharpLibrary.dll, under the local bin directory
+1. Open CSharpLibrary.sln with Microsoft Visual Studio 2015 
+2. Open the Solution Explorer (View -> Solution Explorer), expand Solution -> CSharpLibrary -> References and check if there is reference to the libpxcclr.cs library
+  * If not, then right click on the Reference -> Add reference… to open Reference manager 
+  * Click Browse tab, and then Browse… button to find location of libpxcclr.cs.dll in your file system
+3. Build and save the library CSharpLibrary.dll, under the local bin directory
 
 samples/EmoTracker: 
 
