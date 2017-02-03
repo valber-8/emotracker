@@ -61,6 +61,12 @@ void EmotionsConfiguration_setUsePersonTrackingModuleEmotions(EmotionsConfigurat
 		a_pObject->setUsePersonTrackingModuleEmotions(usePersonTrackingModuleEmotions);
 	}
 }
+void EmotionsConfiguration_setPlaybackMode(EmotionsConfiguration* a_pObject, pxcBool playbackMode) {
+	if (a_pObject != NULL)
+	{
+		a_pObject->setPlaybackMode(playbackMode);
+	}
+}
 
 
 
@@ -164,6 +170,13 @@ void EmotionsTracker_Process(EmotionsTracker* a_pObject)
 			return a_pObject->Process();
 		}
 	}
+pxcStatus EmotionsTracker_getStatus(EmotionsTracker* a_pObject)
+{
+	if (a_pObject != NULL)
+	{
+		return a_pObject->getStatus();
+	}
+}
 
 
 EmotionsHandler* CreateEmotionsHandler(EmotionsTracker *etr)

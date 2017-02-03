@@ -39,10 +39,11 @@
 		pxcBool addGazePoint = true;
 		pxcBool recordingLandmark = true;
 		pxcBool recordingGaze = true;
+		pxcBool playbackMode = false;
 		pxcBool usePersonTrackingModuleEmotions = false;
 		EmotionsConfiguration();
 		/**
-		<param name="streamFilename">Provides ability to setup the output stream filename in rssdk format. By default used <b>1.rssdk</b></param>
+		<param name="streamFilename">Provides ability to setup the output/playback stream filename in rssdk format. By default is NULL - output stream is not stored</param>
 		*/
 		void setStreamFilename(pxcCHAR *streamFilename);
 		/**
@@ -79,6 +80,10 @@
 		*/
 		void setUsePersonTrackingModuleEmotions(pxcBool usePersonTrackingModuleEmotions);
 
+		/**
+		<param name="playbackMode">Set playback mode, if true it playback streamFilename. By default is <b>false</b></param>
+		*/
+		void setPlaybackMode(pxcBool playbackMode);
 
 	};
 
@@ -144,6 +149,7 @@
 		PXCPersonTrackingData* m_person;
 		EmotionsConfiguration* m_conf;
 		EmotionsData* m_data;
+		pxcStatus* m_st;
 		CStdioFile* efile;
 		clock_t starttime;
 		double prevtime;
@@ -251,6 +257,13 @@
 		</summary>
 		*/
 		void Process();
+
+		/**
+		<summary>
+		Return current status
+		</summary>
+		*/
+		pxcStatus getStatus();
 	};
 
 

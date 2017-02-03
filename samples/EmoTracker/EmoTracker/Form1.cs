@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CSharpLibrary;
+using System.IO;
 
 namespace EmoTracker
 {
@@ -79,15 +80,17 @@ namespace EmoTracker
 
                 etr = new Emotracker.EmotionsTracker();
                 Emotracker.EmotionsConfiguration conf = etr.QueryConfiguration();
-                if (textBox1.Text!="") conf.setCalibrationFilename(textBox1.Text);
+                if (calibFilename.Text!="") conf.setCalibrationFilename(calibFilename.Text);
                 else conf.setCalibrationFilename("calib.bin");
-                if (textBox3.Text != "") conf.setEmotionsFilename(textBox3.Text);
+                if (emoFlename.Text != "") conf.setEmotionsFilename(emoFlename.Text);
                 else conf.setEmotionsFilename("1.ttml");
-                if (textBox2.Text != "") conf.setStreamFilename(textBox2.Text);
-                else conf.setStreamFilename("1.rssdk");
+                conf.setStreamFilename(streamFilename.Text==""?null:streamFilename.Text);
+                //if (streamFilename.Text != "") conf.setStreamFilename(streamFilename.Text);
+                //else conf.setStreamFilename("1.rssdk");
                 //etr.Init();
-                conf.setPersonTracking(checkBox1.Checked);
-                conf.setAddGazePoint(checkBox2.Checked);
+                conf.setPersonTracking(usePersonTracker.Checked);
+                conf.setRecordingGaze(gazeCollect.Checked);
+                conf.setAddGazePoint(addGaze.Checked);
 
                 pxcmStatus status = etr.Start();
                 toolStripStatusLabel1.Text = status.ToString();
@@ -96,6 +99,7 @@ namespace EmoTracker
                 stopToolStripMenuItem.Enabled = true;
                 startToolStripMenuItem.Enabled = false;
                 Running = true;
+                timer1.Start();
             }
             else
             {
@@ -125,7 +129,7 @@ namespace EmoTracker
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
             openFileDialog1.Filter = "calibration files (*.bin)|*.bin|All files (*.*)|*.*";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                textBox1.Text = openFileDialog1.FileName;
+                calibFilename.Text = openFileDialog1.FileName;
             else
                 toolStripStatusLabel1.Text = "Open calibration file failed";
         }
@@ -135,7 +139,7 @@ namespace EmoTracker
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
             saveFileDialog1.Filter = "rssdk files (*.rssdk)|*.rssdk|All files (*.*)|*.*";
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-                textBox2.Text = saveFileDialog1.FileName;
+                streamFilename.Text = saveFileDialog1.FileName;
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -143,12 +147,154 @@ namespace EmoTracker
             SaveFileDialog saveFileDialog2 = new SaveFileDialog();
             saveFileDialog2.Filter = "ttml files (*.ttml)|*.ttml|All files (*.*)|*.*";
             if (saveFileDialog2.ShowDialog() == DialogResult.OK)
-                textBox3.Text = saveFileDialog2.FileName;
+                emoFlename.Text = saveFileDialog2.FileName;
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            toolStripStatusLabel1.Text = etr.getStatus().ToString();
+            timer1.Stop();
+            if (etr.getStatus() < pxcmStatus.PXCM_STATUS_NO_ERROR)
+            {
+                button1.Text = "Start";
+                stopToolStripMenuItem.Enabled = false;
+                startToolStripMenuItem.Enabled = true;
+                Running = false;
+            }
+        }
+
+        private void gazeCollect_CheckedChanged(object sender, EventArgs e)
+        {
+            if (gazeCollect.Checked)
+            {
+                addGaze.Enabled = true;
+                calibFilename.Enabled = true;
+            }
+            else
+            {
+                addGaze.Enabled = false;
+                calibFilename.Enabled = false;
+            }
+        }
+
+        private void calibButton_Click(object sender, EventArgs e)
+        {
+            //var g=CreateGraphics();
+
+            Form f = new Form();
+            f.BackColor = Color.White;
+            f.FormBorderStyle = FormBorderStyle.None;
+            f.Bounds = Screen.PrimaryScreen.Bounds;
+            //f.TopMost = true;
+            f.Left = 0;
+            f.Top = 0;
+            f.Size = new Size(SystemInformation.VirtualScreen.Width,
+                              SystemInformation.VirtualScreen.Height);
+            f.Show();
+
+
+            PXCMSession session = PXCMSession.CreateInstance();
+            PXCMSenseManager sm = session.CreateSenseManager();// PXCMSenseManager.CreateInstance();
+            sm.EnableFace();
+            PXCMFaceModule face = sm.QueryFace();
+            PXCMFaceConfiguration facec = face.CreateActiveConfiguration();
+            PXCMFaceConfiguration.GazeConfiguration gazec = facec.QueryGaze();
+            gazec.isEnabled = true;
+            facec.ApplyChanges();
+            // Initialize the pipeline
+            sm.Init();
+            //using (PXCMFaceData output = face.CreateOutput()) { 
+            Boolean calibration=true;
+                while (calibration&&sm.AcquireFrame(false).IsSuccessful())
+                {
+                    PXCMFaceModule face2 = sm.QueryFace();
+                    if (face2 != null)
+                    {
+                    PXCMFaceData output=face2.CreateOutput();
+                    output.Update();
+                    if (output.QueryNumberOfDetectedFaces() > 0)
+                    {
+                        PXCMFaceData.GazeCalibData faced = output.QueryFaceByIndex(0).QueryGazeCalibration();
+                        if (faced != null)
+                        {
+                            PXCMPointI32 calibp;
+                            PXCMFaceData.GazeCalibData.CalibrationState state = faced.QueryCalibrationState();
+                            switch (state)
+                            {
+                                case PXCMFaceData.GazeCalibData.CalibrationState.CALIBRATION_IDLE:
+                                    // Visual cue to the user that the calibration process starts, or LoadCalibData.
+                                    break;
+
+                                case PXCMFaceData.GazeCalibData.CalibrationState.CALIBRATION_NEW_POINT:
+                                    // Visual cue to the user that a new calibration point is available.
+                                    {
+                                        calibp = faced.QueryCalibPoint();
+
+                                        System.Drawing.Graphics graphics = f.CreateGraphics();
+                                        graphics.Clear(f.BackColor);
+                                        System.Drawing.Rectangle rectangle = new System.Drawing.Rectangle(calibp.x - 50, calibp.y - 50, 100, 100);
+                                        graphics.DrawRectangle(System.Drawing.Pens.Red, rectangle);
+                                        graphics.FillRectangle(new SolidBrush(Color.Red), rectangle);
+                                        // set the cursor to that point                            
+                                        break;
+                                    }
+                                case PXCMFaceData.GazeCalibData.CalibrationState.CALIBRATION_SAME_POINT:
+                                    // Continue visual cue to the user at the same location.
+                                    {
+                                        calibp = faced.QueryCalibPoint();
+                                        System.Drawing.Graphics graphics = this.CreateGraphics();
+                                        System.Drawing.Rectangle rectangle = new System.Drawing.Rectangle(
+                                           calibp.x - 50, calibp.y - 50, 100, 100);
+                                        graphics.DrawRectangle(System.Drawing.Pens.Red, rectangle);
+                                        graphics.FillRectangle(new SolidBrush(Color.Red), rectangle);
+                                        // set the cursor to that point                         
+                                        break;
+                                    }
+
+                                case PXCMFaceData.GazeCalibData.CalibrationState.CALIBRATION_DONE:
+                                    // Visual cue to the user that the calibration process is complete or calibration data is loaded.
+                                    // Optionally save the calibration data.
+
+                                    int calibBuffersize = faced.QueryCalibDataSize();
+                                    byte[] calibBuffer = new byte[calibBuffersize];
+                                    var calib_status = faced.QueryCalibData(out calibBuffer);
+
+                                    SaveFileDialog saveFileDialog2 = new SaveFileDialog();
+                                    saveFileDialog2.Filter = "calibration files (*.bin)|*.bin|All files (*.*)|*.*";
+                                    if (saveFileDialog2.ShowDialog() == DialogResult.OK)
+                                    {
+                                        calibFilename.Text = saveFileDialog2.FileName;
+                                        File.WriteAllBytes(calibFilename.Text, calibBuffer);
+                                    }
+                                    calibration = false;
+                                    break;
+
+                            }
+                        }
+                    }
+                }
+                // Resume next frame processing
+                sm.ReleaseFrame();
+            }
+            
+
+
+
+
+
+            facec.Dispose();
+            sm.Dispose();
+            session.Dispose();
+            //f.WindowState = FormWindowState.Maximized;
+            //Application.EnableVisualStyles();
+            //Application.Run(f);
+            f.Close();
+            f.Dispose();
         }
     }
 }

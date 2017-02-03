@@ -16,6 +16,7 @@ extern "C" {
 	extern EMOTRACKER_API void EmotionsConfiguration_setRecordingLandmark(EmotionsConfiguration* a_pObject, pxcBool recordingLandmark);
 	extern EMOTRACKER_API void EmotionsConfiguration_setRecordingGaze(EmotionsConfiguration* a_pObject, pxcBool recordingGaze);
 	extern EMOTRACKER_API void EmotionsConfiguration_setUsePersonTrackingModuleEmotions(EmotionsConfiguration* a_pObject, pxcBool usePersonTrackingModuleEmotions);
+	extern EMOTRACKER_API void EmotionsConfiguration_setPlaybackMode(EmotionsConfiguration* a_pObject, pxcBool playbackMode);
 	
 	extern EMOTRACKER_API EmotionsData* CreateEmotionsData();
 	extern EMOTRACKER_API void DisposeEmotionsData(EmotionsData* a_pObject);
@@ -33,6 +34,7 @@ extern "C" {
 	extern EMOTRACKER_API pxcStatus EmotionsTracker_Stop(EmotionsTracker* a_pObject);
 	extern EMOTRACKER_API pxcStatus EmotionsTracker_Release(EmotionsTracker* a_pObject);
 	extern EMOTRACKER_API void EmotionsTracker_Process(EmotionsTracker* a_pObject);
+	extern EMOTRACKER_API pxcStatus EmotionsTracker_getStatus(EmotionsTracker* a_pObject);
 
 
 	extern EMOTRACKER_API EmotionsHandler* CreateEmotionsHandler(EmotionsTracker *etr);

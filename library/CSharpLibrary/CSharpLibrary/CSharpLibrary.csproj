@@ -13,29 +13,49 @@
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\x86\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x64</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="libpxcclr.cs, Version=10.0.26.396, Culture=neutral, PublicKeyToken=ca106b2214526f83, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Intel\RSSDK\bin\x64\libpxcclr.cs.dll</HintPath>
+    <Reference Condition="'$(Platform)' == 'x64'" Include="libpxcclr.cs, Version=10.0.26.396, Culture=neutral, PublicKeyToken=ca106b2214526f83, processorArchitecture=AMD64">
+      <HintPath>C:\Program Files (x86)\Intel\RSSDK\bin\x64\libpxcclr.cs.dll</HintPath>
+    </Reference>
+    <Reference Condition="'$(Platform)' == 'x86'" Include="libpxcclr.cs, Version=10.0.26.396, Culture=neutral, PublicKeyToken=ca106b2214526f83, processorArchitecture=x86">
+      <HintPath>C:\Program Files (x86)\Intel\RSSDK\bin\win32\libpxcclr.cs.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -57,9 +77,17 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y  "$(ProjectDir)..\..\emotracker\x64\$(ConfigurationName)\emotracker.dll" "$(ProjectDir)$(OutDir)"
+    <PostBuildEvent Condition="'$(Platform)' == 'x64'">xcopy /y  "$(ProjectDir)..\..\emotracker\x64\$(ConfigurationName)\emotracker.dll" "$(ProjectDir)$(OutDir)"
 xcopy /y  "$(ProjectDir)..\..\emotracker\x64\$(ConfigurationName)\emotracker.pdb" "$(ProjectDir)$(OutDir)"
-xcopy /y  "$(ProjectDir)$(OutDir)$(TargetName)$(TargetExt)"  "$(SolutionDir)..\..\bin"</PostBuildEvent>
+xcopy /y  "$(ProjectDir)$(OutDir)$(TargetName)$(TargetExt)"  "$(SolutionDir)..\..\bin"
+	</PostBuildEvent>
+    <PostBuildEvent Condition="'$(Platform)' == 'x86'">xcopy /y  "$(ProjectDir)..\..\emotracker\x86\$(ConfigurationName)\emotracker.dll" "$(ProjectDir)$(OutDir)"
+xcopy /y  "$(ProjectDir)..\..\emotracker\x86\$(ConfigurationName)\emotracker.pdb" "$(ProjectDir)$(OutDir)"
+xcopy /y  "$(ProjectDir)$(OutDir)$(TargetName)$(TargetExt)"  "$(SolutionDir)..\..\bin"
+	</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>if "$(Platform)" == "x86" ( copy /y "$(TargetPath)" "$(SolutionDir)..\..\bin\x86\"  ) else ( copy /y "$(TargetPath)" "$(SolutionDir)..\..\bin\x64\" )</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

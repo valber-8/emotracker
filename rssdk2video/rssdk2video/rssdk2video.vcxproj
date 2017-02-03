@@ -9,14 +9,6 @@
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug|x64">
-      <Configuration>Debug</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|x64">
-      <Configuration>Release</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{0FB75417-608A-45BD-80F0-CD895AC8935F}</ProjectGuid>
@@ -40,20 +32,6 @@
     <CLRSupport>true</CLRSupport>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
-    <CLRSupport>true</CLRSupport>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
-    <CLRSupport>true</CLRSupport>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
@@ -67,25 +45,11 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="PropertySheet.props" />
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="PropertySheet.props" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="PropertySheet.props" />
-  </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LinkIncremental>true</LinkIncremental>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>false</LinkIncremental>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -112,26 +76,6 @@
       <Command>xcopy /y  $(TargetPath) $(SolutionDir)..\bin</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <AdditionalIncludeDirectories>$(RSSDK_DIR)/include;$(OPENCV_DIR)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>
-    <Link>
-      <AdditionalDependencies>libpxc_d.lib;opencv_core2413d.lib;opencv_imgproc2413d.lib;opencv_highgui2413d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OPENCV_DIR)/$(PlatformTarget)/vc12/lib;$(RSSDK_DIR)/lib/$(PlatformName)</AdditionalLibraryDirectories>
-    </Link>
-    <PreBuildEvent>
-      <Command>
-      </Command>
-    </PreBuildEvent>
-    <PostBuildEvent>
-      <Command>xcopy /y  $(TargetPath) $(SolutionDir)..\bin</Command>
-    </PostBuildEvent>
-  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -140,7 +84,7 @@
       <AdditionalIncludeDirectories>$(RSSDK_DIR)/include;$(OPENCV_DIR)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libpxc_d.lib;opencv_core2413d.lib;opencv_imgproc2413d.lib;opencv_highgui2413d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libpxc.lib;opencv_core2413d.lib;opencv_imgproc2413d.lib;opencv_highgui2413d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>$(OPENCV_DIR)/$(PlatformTarget)/vc12/lib;$(RSSDK_DIR)/lib/$(PlatformName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
@@ -149,26 +93,7 @@
       </Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>xcopy /y  $(TargetPath) $(SolutionDir)..\bin</Command>
-    </PostBuildEvent>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <AdditionalIncludeDirectories>$(RSSDK_DIR)/include;$(OPENCV_DIR)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>
-    <Link>
-      <AdditionalDependencies>libpxc_d.lib;opencv_core2413d.lib;opencv_imgproc2413d.lib;opencv_highgui2413d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OPENCV_DIR)/$(PlatformTarget)/vc12/lib;$(RSSDK_DIR)/lib/$(PlatformName)</AdditionalLibraryDirectories>
-    </Link>
-    <PreBuildEvent>
-      <Command>
-      </Command>
-    </PreBuildEvent>
-    <PostBuildEvent>
-      <Command>xcopy /y  $(TargetPath) $(SolutionDir)..\bin</Command>
+      <Command>xcopy /y  $(TargetPath) $(SolutionDir)..\bin\$(PlatformTarget)\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -191,9 +116,7 @@
     <ClCompile Include="rssdk2video.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
