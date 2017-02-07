@@ -181,6 +181,7 @@
             this.smoothIntervalTextBox.Name = "smoothIntervalTextBox";
             this.smoothIntervalTextBox.Size = new System.Drawing.Size(100, 20);
             this.smoothIntervalTextBox.TabIndex = 8;
+            this.smoothIntervalTextBox.Text = "10";
             // 
             // button5
             // 
@@ -200,6 +201,7 @@
             this.button4.TabIndex = 5;
             this.button4.Text = "Search";
             this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // label3
             // 
@@ -279,6 +281,7 @@
             // 
             // toolStripStatusLabel1
             // 
+            this.toolStripStatusLabel1.MergeAction = System.Windows.Forms.MergeAction.Replace;
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(0, 17);
             // 
