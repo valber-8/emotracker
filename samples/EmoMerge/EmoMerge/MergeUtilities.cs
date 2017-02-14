@@ -272,6 +272,9 @@ namespace EmoMerge
                 {
                     cdata += ee.ToString();
                 }
+
+
+
                 content.Add(new XElement(ns + "p", new XAttribute("begin", c.Attribute("begin").Value), new XAttribute("end", c.Attribute("end").Value),
                                     new XElement(ns + "data", new XAttribute("type", "text/plain; charset = us-ascii"),
                                         new XElement(ns + "metadata", new XAttribute("id", (mid++).ToString())),
