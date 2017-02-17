@@ -162,7 +162,11 @@ xcopy /y  "$(ProjectDir)$(OutDir)$(TargetName)$(TargetExt)"  "$(SolutionDir)..\.
     <PostBuildEvent>if "$(Platform)" == "x86" ( copy /y "$(RSSDK_DIR)\bin\win32\libpxccpp2c.dll" "$(TargetDir)" ) else ( copy /y "$(RSSDK_DIR)\bin\$(Platform)\libpxccpp2c.dll" "$(TargetDir)" )
 if "$(Platform)" == "x86" ( copy /y "$(RSSDK_DIR)\bin\win32\libpxcclr.cs.dll" "$(SolutionDir)..\..\bin\x86\"  ) else ( copy /y "$(RSSDK_DIR)\bin\$(Platform)\libpxcclr.cs.dll" "$(SolutionDir)..\..\bin\x64\" )
 if "$(Platform)" == "x86" ( copy /y "$(TargetPath)" "$(SolutionDir)..\..\bin\x86\"  ) else ( copy /y "$(TargetPath)" "$(SolutionDir)..\..\bin\x64\" )
-if "$(Platform)" == "x86" ( copy /y "$(RSSDK_DIR)\bin\win32\libpxccpp2c.dll"  "$(SolutionDir)..\..\bin\x86\" ) else ( copy /y "$(RSSDK_DIR)\bin\$(Platform)\libpxccpp2c.dll" "$(SolutionDir)..\..\bin\x64\" )</PostBuildEvent>
+if "$(Platform)" == "x86" ( copy /y "$(RSSDK_DIR)\bin\win32\libpxccpp2c.dll"  "$(SolutionDir)..\..\bin\x86\" ) else ( copy /y "$(RSSDK_DIR)\bin\$(Platform)\libpxccpp2c.dll" "$(SolutionDir)..\..\bin\x64\" )
+copy /y  "$(SolutionDir)..\..\library\CSharpLibrary\CSharpLibrary\bin\$(PlatformName)\$(ConfigurationName)\CSharpLibrary.dll"  "$(TargetDir)" 
+copy /y  "$(SolutionDir)..\..\library\CSharpLibrary\CSharpLibrary\bin\$(PlatformName)\$(ConfigurationName)\CSharpLibrary.pdb"  "$(TargetDir)" 
+if "$(Platform)" == "x86" (copy /y  "$(SolutionDir)..\..\library\emotracker\$(ConfigurationName)\emotracker.dll"  "$(TargetDir)")  else (copy /y  "$(SolutionDir)..\..\library\emotracker\x64\$(ConfigurationName)\emotracker.dll"  "$(TargetDir)") 
+if "$(Platform)" == "x86" (copy /y  "$(SolutionDir)..\..\library\emotracker\$(ConfigurationName)\emotracker.pdb"  "$(TargetDir)")  else (copy /y  "$(SolutionDir)..\..\library\emotracker\x64\$(ConfigurationName)\emotracker.pdb"  "$(TargetDir)")</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

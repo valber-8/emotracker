@@ -254,10 +254,12 @@ namespace EmoMerge
                                      .Select(a => new { x = Convert.ToDouble(a[0]), y = Convert.ToDouble(a[1]) });
                 var cd = new XDocument(new XElement("root", new XElement("Face", new XAttribute("id", "0"), ll)));
 
+                string gazemark = null;
                 if (gaze.Count() > 0)
                 {
                     XElement gg = new XElement("Gaze", gaze.Average(g => g.x).ToString() + " " + gaze.Average(g => g.y).ToString());
                     cd.Descendants("Face").FirstOrDefault().Add(gg);
+                    gazemark = gaze.Average(g => g.x).ToString() + "% " + gaze.Average(g => g.y).ToString() + "%";
                 }
 
                 IEnumerable<XElement> pp = from XElement e in xdoc.Descendants("Person").Nodes()
@@ -266,6 +268,13 @@ namespace EmoMerge
                                            select e;
                 if (pp.Count() > 0)
                     cd.Element("root").Add(new XElement("Person", new XAttribute("id", "0"), pp));
+
+                var emotion = (from XElement p in query
+                               group p by p.Nodes().OfType<XText>() into gp
+                               orderby gp.Count() descending
+                               select gp)
+                                    .Take(1)
+                                    .Select(g => g.Key);
 
                 string cdata = "";
                 foreach (XElement ee in cd.Descendants("root").Nodes())
@@ -279,7 +288,10 @@ namespace EmoMerge
                                     new XElement(ns + "data", new XAttribute("type", "text/plain; charset = us-ascii"),
                                         new XElement(ns + "metadata", new XAttribute("id", (mid++).ToString())),
                                         new XCData(cdata)
-                                    )/*,
+                                    ),
+                                    gazemark == null ? null : new XElement(ns + "span", new XAttribute(tts + "origin", gazemark), new XText("+")),
+                                    emotion
+                                    /*,
                                         c.Descendants(ns + "span"),
                                         e.Descendants(ns + "span"),
                                         c.Nodes().OfType<XText>(),
@@ -352,10 +364,13 @@ namespace EmoMerge
                                         .Select(a => new { x = Convert.ToDouble(a[0]), y = Convert.ToDouble(a[1]) });
 
                 var cd = new XDocument(new XElement("root", new XElement("Face", new XAttribute("id", "0"), ll)));
+
+                string gazemark=null;
                 if (gaze.Count() > 0)
                 {
                     XElement gg = new XElement("Gaze", gaze.Average(g => g.x).ToString() + " " + gaze.Average(g => g.y).ToString());
                     cd.Descendants("Face").FirstOrDefault().Add(gg);
+                    gazemark = gaze.Average(g => g.x).ToString() + "% " + gaze.Average(g => g.y).ToString() + "%";
                 }
 
                 IEnumerable<XElement> pp = from XElement e in xdoc.Descendants("Person").Nodes()
@@ -364,6 +379,13 @@ namespace EmoMerge
                                            select e;
                 if (pp.Count() > 0)
                     cd.Element("root").Add(new XElement("Person", new XAttribute("id", "0"), pp));
+
+                var emotion = (from XElement p in query
+                               group p by p.Nodes().OfType<XText>() into gp
+                               orderby gp.Count() descending
+                               select gp)
+                                    .Take(1)
+                                    .Select(g => g.Key);
 
                 cdata = "";
                 foreach (XElement ee in cd.Descendants("root").Nodes())
@@ -375,7 +397,11 @@ namespace EmoMerge
                                     new XElement(ns + "data", new XAttribute("type", "text/plain; charset = us-ascii"),
                                         new XElement(ns + "metadata", new XAttribute("id", (mid++).ToString())),
                                         new XCData(cdata)
-                                    )/*,
+                                    ),
+                                    gazemark==null?null:new XElement(ns + "span", new XAttribute(tts+"origin",gazemark),new XText("+")),
+                                    emotion
+                                    
+                                    /*,
                                         c.Descendants(ns + "span"),
                                         e.Descendants(ns + "span"),
                                         c.Nodes().OfType<XText>(),
