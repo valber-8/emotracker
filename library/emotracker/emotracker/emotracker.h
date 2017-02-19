@@ -115,9 +115,9 @@
 		pxcI32 Tongue_Out;
 		pxcI32 Puff_Right_Cheek;
 		pxcI32 Puff_Left_Cheek;
-		pxcI32 Yaw;
-		pxcI32 Pitch;
-		pxcI32 Roll;
+		pxcF32 Yaw;
+		pxcF32 Pitch;
+		pxcF32 Roll;
 		PXCFaceData::LandmarkPoint *LandmarkPoints;
 
 		PXCPoint3DF32 faceDirection;
@@ -157,6 +157,7 @@
 		volatile BOOL stop_thread;
 		LPDWORD lpThreadId;
 		HANDLE thread;
+		int horizontal=1366, vertical = 768;
 		std::map<PXCFaceData::ExpressionsData::FaceExpression, std::wstring> m_expressionMap;
 
 		std::map<PXCFaceData::ExpressionsData::FaceExpression, std::wstring> InitExpressionsMap();

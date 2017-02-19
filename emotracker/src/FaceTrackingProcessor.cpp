@@ -205,6 +205,9 @@ void FaceTrackingProcessor::WriteEmo(PXCFaceData* faceOutput, PXCPersonTrackingD
 
 		assert(personData != NULL);
 
+
+		PXCPersonTrackingData::PersonTracking* personTracking;
+		personTracking = personData->QueryTracking();
 		
 		swprintf_s<sizeof(tempLine) / sizeof(pxcCHAR)>(tempLine, L"					<Person id=\"%d\">\n", i);
 		file->WriteString(tempLine);
@@ -216,18 +219,26 @@ void FaceTrackingProcessor::WriteEmo(PXCFaceData* faceOutput, PXCPersonTrackingD
 		bool isNeutralExpressionValid = personExpressions->QueryExpression(PXCPersonTrackingData::PersonExpressions::NEUTRAL, &neutralResult);
 		//if (isNeutralExpressionValid)
 		//{
-			swprintf_s<sizeof(tempLine) / sizeof(WCHAR) >(tempLine, L"						<Neutral>%d</Neutral>\n", isNeutralExpressionValid?neutralResult.confidence:-neutralResult.confidence);
+			swprintf_s<sizeof(tempLine) / sizeof(WCHAR) >(tempLine, L"						<Neutral>%d</Neutral>\n", isNeutralExpressionValid?neutralResult.confidence:-abs(neutralResult.confidence));
 			file->WriteString(tempLine);
 			if (isNeutralExpressionValid && neutralResult.confidence > max) {
 				max = neutralResult.confidence;		emo = L"Neutral";
 			}
 		//}
+			HWND panelWindow = GetDlgItem(m_window, IDC_PANEL);
+			HDC dc1 = GetDC(panelWindow);
+			HDC dc2 = CreateCompatibleDC(dc1);
+
+			//SelectObject(dc2, m_bitmap);
+			SetTextColor(dc2, RGB(0, 0, 0));
+			TextOutW(dc2,20,20, tempLine, (int)std::char_traits<wchar_t>::length(tempLine));
+			ReleaseDC(panelWindow, dc1);
 
 		PXCPersonTrackingData::PersonExpressions::PersonExpressionsResult happinessResult;
 		bool isHappinessExpressionValid = personExpressions->QueryExpression(PXCPersonTrackingData::PersonExpressions::HAPPINESS, &happinessResult);
 		//if (isHappinessExpressionValid)
 		//{
-			swprintf_s<sizeof(tempLine) / sizeof(WCHAR) >(tempLine, L"						<Happiness>%d</Happiness>\n", isHappinessExpressionValid?happinessResult.confidence:-happinessResult.confidence);
+			swprintf_s<sizeof(tempLine) / sizeof(WCHAR) >(tempLine, L"						<Happiness>%d</Happiness>\n", isHappinessExpressionValid?happinessResult.confidence:-abs(happinessResult.confidence));
 			file->WriteString(tempLine);
 			if (isHappinessExpressionValid && happinessResult.confidence > max) {
 				max = happinessResult.confidence;		emo = L"Happy";
@@ -238,7 +249,7 @@ void FaceTrackingProcessor::WriteEmo(PXCFaceData* faceOutput, PXCPersonTrackingD
 		bool isSadnessExpressionValid = personExpressions->QueryExpression(PXCPersonTrackingData::PersonExpressions::SADNESS, &sadnessResult);
 		//if (isSadnessExpressionValid)
 		//{
-			swprintf_s<sizeof(tempLine) / sizeof(WCHAR) >(tempLine, L"						<Sadness>%d</Sadness>\n", isSadnessExpressionValid?sadnessResult.confidence:-sadnessResult.confidence);
+			swprintf_s<sizeof(tempLine) / sizeof(WCHAR) >(tempLine, L"						<Sadness>%d</Sadness>\n", isSadnessExpressionValid?sadnessResult.confidence:-abs(sadnessResult.confidence));
 			file->WriteString(tempLine);
 			if (isSadnessExpressionValid && sadnessResult.confidence > max) {
 				max = sadnessResult.confidence;		emo = L"Sad";
@@ -249,7 +260,7 @@ void FaceTrackingProcessor::WriteEmo(PXCFaceData* faceOutput, PXCPersonTrackingD
 		bool isSurpriseExpressionValid = personExpressions->QueryExpression(PXCPersonTrackingData::PersonExpressions::SURPRISE, &surpriseResult);
 		//if (isSurpriseExpressionValid)
 		//{
-			swprintf_s<sizeof(tempLine) / sizeof(WCHAR) >(tempLine, L"						<Surprised>%d</Surprised>\n", isSurpriseExpressionValid?surpriseResult.confidence:-surpriseResult.confidence);
+			swprintf_s<sizeof(tempLine) / sizeof(WCHAR) >(tempLine, L"						<Surprised>%d</Surprised>\n", isSurpriseExpressionValid?surpriseResult.confidence:-abs(surpriseResult.confidence));
 			file->WriteString(tempLine);
 			if (isSurpriseExpressionValid && surpriseResult.confidence > max) {
 				max = surpriseResult.confidence;		emo = L"Surprised";
@@ -260,7 +271,7 @@ void FaceTrackingProcessor::WriteEmo(PXCFaceData* faceOutput, PXCPersonTrackingD
 		bool isDisgustExpressionValid = personExpressions->QueryExpression(PXCPersonTrackingData::PersonExpressions::DISGUST, &disgustResult);
 		//if (isDisgustExpressionValid)
 		//{
-			swprintf_s<sizeof(tempLine) / sizeof(WCHAR) >(tempLine, L"						<Disgusted>%d</Disgusted>\n", isDisgustExpressionValid?disgustResult.confidence:-disgustResult.confidence);
+			swprintf_s<sizeof(tempLine) / sizeof(WCHAR) >(tempLine, L"						<Disgusted>%d</Disgusted>\n", isDisgustExpressionValid?disgustResult.confidence:-abs(disgustResult.confidence));
 			file->WriteString(tempLine);
 			if (isDisgustExpressionValid && disgustResult.confidence > max) {
 				max = disgustResult.confidence;		emo = L"Disgusted";
@@ -271,7 +282,7 @@ void FaceTrackingProcessor::WriteEmo(PXCFaceData* faceOutput, PXCPersonTrackingD
 		bool isContemptExpressionValid = personExpressions->QueryExpression(PXCPersonTrackingData::PersonExpressions::CONTEMPT, &contemptResult);
 		//if (isContemptExpressionValid)
 		//{
-			swprintf_s<sizeof(tempLine) / sizeof(WCHAR) >(tempLine, L"						<Contemptful>%d</Contemptful>\n", isContemptExpressionValid?contemptResult.confidence:-contemptResult.confidence);
+			swprintf_s<sizeof(tempLine) / sizeof(WCHAR) >(tempLine, L"						<Contemptful>%d</Contemptful>\n", isContemptExpressionValid?contemptResult.confidence:-abs(contemptResult.confidence));
 			file->WriteString(tempLine);
 			if (isContemptExpressionValid && contemptResult.confidence > max) {
 				max = contemptResult.confidence;		emo = L"Contemptful";
@@ -282,7 +293,7 @@ void FaceTrackingProcessor::WriteEmo(PXCFaceData* faceOutput, PXCPersonTrackingD
 		bool isFearExpressionValid = personExpressions->QueryExpression(PXCPersonTrackingData::PersonExpressions::FEAR, &fearResult);
 		//if (isFearExpressionValid)
 		//{
-			swprintf_s<sizeof(tempLine) / sizeof(WCHAR) >(tempLine, L"						<Fearful>%d</Fearful>\n", isFearExpressionValid?fearResult.confidence:-fearResult.confidence);
+			swprintf_s<sizeof(tempLine) / sizeof(WCHAR) >(tempLine, L"						<Fearful>%d</Fearful>\n", isFearExpressionValid?fearResult.confidence:-abs(fearResult.confidence));
 			file->WriteString(tempLine);
 			if (isFearExpressionValid && fearResult.confidence > max) {
 				max = fearResult.confidence;		emo = L"Fear";
@@ -293,7 +304,7 @@ void FaceTrackingProcessor::WriteEmo(PXCFaceData* faceOutput, PXCPersonTrackingD
 		bool isAngerExpressionValid = personExpressions->QueryExpression(PXCPersonTrackingData::PersonExpressions::ANGER, &angerResult);
 		//if (isAngerExpressionValid)
 		//{
-			swprintf_s<sizeof(tempLine) / sizeof(WCHAR) >(tempLine, L"						<Angry>%d</Angry>\n", isAngerExpressionValid?angerResult.confidence:-angerResult.confidence);
+			swprintf_s<sizeof(tempLine) / sizeof(WCHAR) >(tempLine, L"						<Angry>%d</Angry>\n", isAngerExpressionValid?angerResult.confidence:-abs(angerResult.confidence));
 			file->WriteString(tempLine);
 			if (isAngerExpressionValid && angerResult.confidence > max) {
 				max = angerResult.confidence;		emo = L"Angry";

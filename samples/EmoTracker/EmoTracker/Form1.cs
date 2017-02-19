@@ -158,7 +158,7 @@ namespace EmoTracker
         private void timer1_Tick(object sender, EventArgs e)
         {
             toolStripStatusLabel1.Text = etr.getStatus().ToString();
-            timer1.Stop();
+            //timer1.Stop();
             if (etr.getStatus() < pxcmStatus.PXCM_STATUS_NO_ERROR)
             {
                 button1.Text = "Start";
