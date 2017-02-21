@@ -54,6 +54,7 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.gazeCollect = new System.Windows.Forms.CheckBox();
             this.calibButton = new System.Windows.Forms.Button();
+            this.syncWithVlc = new System.Windows.Forms.CheckBox();
             this.contextMenuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -257,11 +258,22 @@
             this.calibButton.UseVisualStyleBackColor = true;
             this.calibButton.Click += new System.EventHandler(this.calibButton_Click);
             // 
+            // syncWithVlc
+            // 
+            this.syncWithVlc.AutoSize = true;
+            this.syncWithVlc.Location = new System.Drawing.Point(143, 122);
+            this.syncWithVlc.Name = "syncWithVlc";
+            this.syncWithVlc.Size = new System.Drawing.Size(129, 17);
+            this.syncWithVlc.TabIndex = 15;
+            this.syncWithVlc.Text = "Synchronize with VLC";
+            this.syncWithVlc.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 219);
+            this.Controls.Add(this.syncWithVlc);
             this.Controls.Add(this.calibButton);
             this.Controls.Add(this.gazeCollect);
             this.Controls.Add(this.addGaze);
@@ -314,6 +326,7 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.CheckBox gazeCollect;
         private System.Windows.Forms.Button calibButton;
+        private System.Windows.Forms.CheckBox syncWithVlc;
     }
 }
 

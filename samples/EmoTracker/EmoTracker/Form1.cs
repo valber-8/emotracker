@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using CSharpLibrary;
 using System.IO;
+using System.Net.Sockets;
 
 namespace EmoTracker
 {
@@ -100,6 +101,22 @@ namespace EmoTracker
                 startToolStripMenuItem.Enabled = false;
                 Running = true;
                 timer1.Start();
+
+                if (syncWithVlc.Checked) {
+                    try
+                    {
+                        TcpClient tcpClient = new TcpClient("127.0.0.1", 4040);
+                        NetworkStream networkStream = tcpClient.GetStream();
+                        StreamWriter clientStreamWriter = new StreamWriter(networkStream);
+                        clientStreamWriter.Write("pause\r\n");
+                        clientStreamWriter.Flush();
+                        networkStream.Close();
+                        tcpClient.Close();
+                    }
+                    catch (SocketException ex) {
+                        toolStripStatusLabel1.Text = "Can't open network connection";
+                    }
+                }
             }
             else
             {
@@ -111,6 +128,23 @@ namespace EmoTracker
                 stopToolStripMenuItem.Enabled = false;
                 startToolStripMenuItem.Enabled = true;
                 Running = false;
+
+                try
+                {
+                    TcpClient tcpClient = new TcpClient("127.0.0.1", 4040);
+                    NetworkStream networkStream = tcpClient.GetStream();
+                    StreamWriter clientStreamWriter = new StreamWriter(networkStream);
+                    clientStreamWriter.Write("pause\r\n");
+                    clientStreamWriter.Flush();
+                    networkStream.Close();
+                    tcpClient.Close();
+                }
+                catch (SocketException ex)
+                {
+                    toolStripStatusLabel1.Text = "Can't open network connection";
+                }
+
+
             }
         }
 
