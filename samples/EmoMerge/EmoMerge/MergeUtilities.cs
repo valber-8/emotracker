@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -245,13 +246,13 @@ namespace EmoMerge
 
                 IEnumerable<XElement> ll = from XElement e in xdoc.Descendants("Face").Nodes()
                     .Where(ee => (((XElement)ee).Name.ToString() != "Landmark") && (((XElement)ee).Name.ToString() != "Gaze"))
-                    .GroupBy(g => ((XElement)g).Name.ToString(), v => Convert.ToDouble(((XElement)v).Value))
+                    .GroupBy(g => ((XElement)g).Name.ToString(), v => Convert.ToDouble(((XElement)v).Value, CultureInfo.InvariantCulture))
                     .Select(g => new XElement(g.Key, g.Where(v => Math.Abs(v) < GlobalVar.MaxAccountedVal).Average().ToString()))
                                            select e;
 
                 var gaze = (from XElement e in xdoc.Descendants("Face").Nodes().Where(ee => (((XElement)ee).Name.ToString() == "Gaze"))
                             select e.Value.ToString().Split(' '))
-                                     .Select(a => new { x = Convert.ToDouble(a[0]), y = Convert.ToDouble(a[1]) });
+                                     .Select(a => new { x = Convert.ToDouble(a[0], CultureInfo.InvariantCulture), y = Convert.ToDouble(a[1], CultureInfo.InvariantCulture) });
                 var cd = new XDocument(new XElement("root", new XElement("Face", new XAttribute("id", "0"), ll)));
 
                 string gazemark = null;
@@ -263,7 +264,7 @@ namespace EmoMerge
                 }
 
                 IEnumerable<XElement> pp = from XElement e in xdoc.Descendants("Person").Nodes()
-                    .GroupBy(g => ((XElement)g).Name.ToString(), v => Convert.ToDouble(((XElement)v).Value))
+                    .GroupBy(g => ((XElement)g).Name.ToString(), v => Convert.ToDouble(((XElement)v).Value, CultureInfo.InvariantCulture))
                     .Select(g => new XElement(g.Key, g.Average().ToString()))
                                            select e;
                 if (pp.Count() > 0)
@@ -356,12 +357,12 @@ namespace EmoMerge
 
                 IEnumerable<XElement> ll = from XElement e in xdoc.Descendants("Face").Nodes()
                         .Where(ee => (((XElement)ee).Name.ToString() != "Landmark") && (((XElement)ee).Name.ToString() != "Gaze"))
-                        .GroupBy(g => ((XElement)g).Name.ToString(), v => Convert.ToDouble(((XElement)v).Value))
+                        .GroupBy(g => ((XElement)g).Name.ToString(), v => Convert.ToDouble(((XElement)v).Value, CultureInfo.InvariantCulture))
                         .Select(g => new XElement(g.Key, g.Where(v => Math.Abs(v) < GlobalVar.MaxAccountedVal).Average().ToString()))
                                            select e;
                 var gaze = (from XElement e in xdoc.Descendants("Face").Nodes().Where(ee => (((XElement)ee).Name.ToString() == "Gaze"))
                             select e.Value.ToString().Split(' '))
-                                        .Select(a => new { x = Convert.ToDouble(a[0]), y = Convert.ToDouble(a[1]) });
+                                        .Select(a => new { x = Convert.ToDouble(a[0], CultureInfo.InvariantCulture), y = Convert.ToDouble(a[1], CultureInfo.InvariantCulture) });
 
                 var cd = new XDocument(new XElement("root", new XElement("Face", new XAttribute("id", "0"), ll)));
 
@@ -374,7 +375,7 @@ namespace EmoMerge
                 }
 
                 IEnumerable<XElement> pp = from XElement e in xdoc.Descendants("Person").Nodes()
-                    .GroupBy(g => ((XElement)g).Name.ToString(), v => Convert.ToDouble(((XElement)v).Value))
+                    .GroupBy(g => ((XElement)g).Name.ToString(), v => Convert.ToDouble(((XElement)v).Value, CultureInfo.InvariantCulture))
                     .Select(g => new XElement(g.Key, g.Average().ToString()))
                                            select e;
                 if (pp.Count() > 0)

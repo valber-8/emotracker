@@ -14,6 +14,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
+using System.Globalization;
 
 namespace GazeHeatMap
 {
@@ -187,7 +188,7 @@ namespace GazeHeatMap
 
                 var gaze = (from XElement e in xdoc.Descendants("Face").Nodes().Where(ee => (((XElement)ee).Name.ToString() == "Gaze"))
                             select e.Value.ToString().Split(' '))
-                                     .Select(a => new { x = Convert.ToDouble(a[0]), y = Convert.ToDouble(a[1]) });
+                                     .Select(a => new { x = Convert.ToDouble(a[0], CultureInfo.InvariantCulture), y = Convert.ToDouble(a[1], CultureInfo.InvariantCulture) });
 
                 double tms = (DateTime.Parse(c.Attribute("end").Value) - DateTime.Parse(c.Attribute("begin").Value)).TotalMilliseconds;
 
@@ -271,7 +272,7 @@ namespace GazeHeatMap
 
                 var gaze = (from XElement e in xdoc.Descendants("Face").Nodes().Where(ee => (((XElement)ee).Name.ToString() == "Gaze"))
                             select e.Value.ToString().Split(' '))
-                                     .Select(a => new { x = Convert.ToDouble(a[0]), y = Convert.ToDouble(a[1]) });
+                                     .Select(a => new { x = Convert.ToDouble(a[0], CultureInfo.InvariantCulture), y = Convert.ToDouble(a[1], CultureInfo.InvariantCulture) });
 
                 double tms = (DateTime.Parse(c.Attribute("end").Value) - DateTime.Parse(c.Attribute("begin").Value)).TotalMilliseconds;
 
