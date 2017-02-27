@@ -289,6 +289,7 @@
             this.Controls.Add(this.calibFilename);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.button1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "EmoTracker";
             this.Resize += new System.EventHandler(this.Form1_Resize);

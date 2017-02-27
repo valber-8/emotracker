@@ -22,7 +22,7 @@ namespace EmoMerge
         {
         }
 
-        public static void Merge(FileStream first, FileStream second, FileStream output)
+        public static void Merge(Stream first, Stream second, Stream output)
         {
 
             int mid = 0;
@@ -62,23 +62,28 @@ namespace EmoMerge
                 var c1 = firstXml.Descendants(ns + "p").Where(el => DateTime.Parse(el.Attribute("begin").Value) <= d.b && DateTime.Parse(el.Attribute("end").Value) >= d.e);
                 var c2 = secondXml.Descendants(ns + "p").Where(el => DateTime.Parse(el.Attribute("begin").Value) <= d.b && DateTime.Parse(el.Attribute("end").Value) >= d.e);
                 XDocument xdoc = XDocument.Parse("<root></root>");
-                if (c1.Count() > 0)
+
+                List<XElement> nodes = Enumerable.Empty<XElement>().ToList();
+                List<XText> text = Enumerable.Empty<XText>().ToList();
+                if (c1.Any())
                 {
                     var node = c1.Descendants(ns + "data").DescendantNodes().Single(el => el.NodeType == XmlNodeType.CDATA);
                     var cont = node.Parent.Value.Trim();
                     var xdoc2 = XDocument.Parse("<root>" + cont + "</root>");
 
-                    foreach (XElement ee in xdoc.Descendants("Face"))
+                    foreach (XElement ee in xdoc2.Descendants("Face"))
                     {
                         ee.Attribute("id").Value = "1_" + ee.Attribute("id").Value;
                     }
-                    foreach (XElement ee in xdoc.Descendants("Person"))
+                    foreach (XElement ee in xdoc2.Descendants("Person"))
                     {
                         ee.Attribute("id").Value = "1_" + ee.Attribute("id").Value;
                     }
                     xdoc.Descendants("root").FirstOrDefault().Add(xdoc2.Descendants("root").FirstOrDefault().Nodes());
+                    nodes.Add(c1.Descendants(ns + "span").FirstOrDefault());
+                    text.Add(c1.Nodes().OfType<XText>().FirstOrDefault());
                 }
-                if (c2.Count() > 0)
+                if (c2.Any())
                 {
                     var node = c2.Descendants(ns + "data").DescendantNodes().Single(el => el.NodeType == XmlNodeType.CDATA);
                     var cont = node.Parent.Value.Trim();
@@ -94,17 +99,13 @@ namespace EmoMerge
                         ee.Attribute("id").Value = "2_" + ee.Attribute("id").Value;
                     }
                     xdoc.Descendants("root").FirstOrDefault().Add(xdoc2.Descendants("root").FirstOrDefault().Nodes());
+                    nodes.Add(c2.Descendants(ns + "span").FirstOrDefault());
+                    text.Add(c2.Nodes().OfType<XText>().FirstOrDefault());
                 }
                 string cdata = "";
                 foreach (XElement ee in xdoc.Descendants("root").Nodes())
                     cdata += ee.ToString();
 
-                List<XElement> nodes = Enumerable.Empty<XElement>().ToList();
-                if (c1.Count() > 0) nodes.Add(c1.Descendants(ns + "span").FirstOrDefault());
-                if (c2.Count() > 0) nodes.Add(c2.Descendants(ns + "span").FirstOrDefault());
-                List<XText> text = Enumerable.Empty<XText>().ToList();
-                if (c1.Count() > 0) text.Add(c1.Nodes().OfType<XText>().FirstOrDefault());
-                if (c2.Count() > 0) text.Add(c2.Nodes().OfType<XText>().FirstOrDefault());
                 content.Add(new XElement(ns + "p", new XAttribute("begin", d.b.ToString("HH:mm:ss.ff", System.Globalization.CultureInfo.InvariantCulture)),
                                 new XAttribute("end", d.e.ToString("HH:mm:ss.ff", System.Globalization.CultureInfo.InvariantCulture)),
                                 new XElement(ns + "data", new XAttribute("type", "text/plain; charset = us-ascii"),
@@ -120,100 +121,11 @@ namespace EmoMerge
 
             }
 
-
-            /*
-            var query = from c in firstXml.Descendants(ns + "p")
-                        select c;
-            foreach (XElement c in query)
-            {
-                var nested1 = from e in secondXml.Descendants(ns + "p")
-                              where DateTime.Parse(e.Attribute("end").Value) > DateTime.Parse(c.Attribute("begin").Value)
-                                    && DateTime.Parse(e.Attribute("end").Value) <= DateTime.Parse(c.Attribute("end").Value)
-                                    && DateTime.Parse(e.Attribute("begin").Value) <= DateTime.Parse(c.Attribute("begin").Value)
-                              select e;
-                var nested2 = from e in secondXml.Descendants(ns + "p")
-                              where DateTime.Parse(e.Attribute("begin").Value) >= DateTime.Parse(c.Attribute("begin").Value)
-                                    && DateTime.Parse(e.Attribute("begin").Value) < DateTime.Parse(c.Attribute("end").Value)
-                                    && DateTime.Parse(e.Attribute("end").Value) <= DateTime.Parse(c.Attribute("end").Value)
-                              select e;
-                var nested3 = from e in secondXml.Descendants(ns + "p")
-                              where DateTime.Parse(e.Attribute("begin").Value) >= DateTime.Parse(c.Attribute("begin").Value)
-                                    && DateTime.Parse(e.Attribute("begin").Value) < DateTime.Parse(c.Attribute("end").Value)
-                                    && DateTime.Parse(e.Attribute("end").Value) > DateTime.Parse(c.Attribute("begin").Value)
-                                    && DateTime.Parse(e.Attribute("end").Value) <= DateTime.Parse(c.Attribute("end").Value)
-                              select e;
-                var nested4 = from e in secondXml.Descendants(ns + "p")
-                              where DateTime.Parse(c.Attribute("begin").Value) >= DateTime.Parse(e.Attribute("begin").Value)
-                                    && DateTime.Parse(c.Attribute("begin").Value) < DateTime.Parse(e.Attribute("end").Value)
-                                    && DateTime.Parse(c.Attribute("end").Value) > DateTime.Parse(e.Attribute("begin").Value)
-                                    && DateTime.Parse(c.Attribute("end").Value) <= DateTime.Parse(e.Attribute("end").Value)
-                              select e;
-
-
-
-                Action<XElement, String, String> contAdd = (e, begin, end) =>
-                {
-                        var node = c.Descendants(ns + "data").DescendantNodes().Single(el => el.NodeType == XmlNodeType.CDATA);
-                        var cont = node.Parent.Value.Trim();
-                        var xdoc = XDocument.Parse("<root>" + cont + "</root>");
-
-                        foreach (XElement ee in xdoc.Descendants("Face"))
-                        {
-                            ee.Attribute("id").Value = "1_" + ee.Attribute("id").Value;
-                        }
-                        foreach (XElement ee in xdoc.Descendants("Person"))
-                        {
-                            ee.Attribute("id").Value = "1_" + ee.Attribute("id").Value;
-                        }
-
-
-                        node = e.Descendants(ns + "data").DescendantNodes().Single(el => el.NodeType == XmlNodeType.CDATA);
-                        cont = node.Parent.Value.Trim();
-
-                        var xdoc2 = XDocument.Parse("<root>" + cont + "</root>");
-
-                        foreach (XElement ee in xdoc2.Descendants("Face"))
-                        {
-                            ee.Attribute("id").Value = "2_" + ee.Attribute("id").Value;
-                        }
-                        foreach (XElement ee in xdoc2.Descendants("Person"))
-                        {
-                            ee.Attribute("id").Value = "2_" + ee.Attribute("id").Value;
-                        }
-                        xdoc.Descendants("root").FirstOrDefault().Add(xdoc2.Descendants("root").FirstOrDefault().Nodes());
-                        string cdata = "";
-                        foreach (XElement ee in xdoc.Descendants("root").Nodes())
-                            cdata += ee.ToString();
-
-                        content.Add(new XElement(ns + "p", new XAttribute("begin", begin), new XAttribute("end", end),
-                                        new XElement(ns + "data", new XAttribute("type", "text/plain; charset = us-ascii"),
-                                            new XElement(ns + "metadata", new XAttribute("id", (mid++).ToString())),               //change it
-                                                                                                                                   //new XCData(xdoc.Descendants("root").DescendantNodes().ToString())
-                                                                                                                                   //new XCData(string.Join("\n",xdoc.Descendants("root").DescendantNodes().ToString()))
-                                            new XCData(cdata)
-                                        ),
-                                        c.Descendants(ns + "span"),
-                                        e.Descendants(ns + "span"),
-                                        c.Nodes().OfType<XText>(),
-                                        e.Nodes().OfType<XText>()
-                                    ));
-
-
-                    
-                };
-
-                foreach (XElement e in nested1) contAdd(e, c.Attribute("begin").Value, e.Attribute("end").Value);
-                foreach (XElement e in nested2) contAdd(e, e.Attribute("begin").Value, c.Attribute("end").Value);
-                foreach (XElement e in nested3) contAdd(e, e.Attribute("begin").Value, e.Attribute("end").Value);
-                foreach (XElement e in nested4) contAdd(e, c.Attribute("begin").Value, c.Attribute("end").Value);
-                
-
-            }
-            */
+            
             outXml.Save(output);
 
         }
-        public static void Average(FileStream first, FileStream output)
+        public static void Average(Stream first, Stream output)
         {
             int mid = 0;
             XNamespace ns = "http://www.w3.org/ns/ttml";
@@ -244,19 +156,20 @@ namespace EmoMerge
                 var cont = node.Parent.Value.Trim();
                 var xdoc = XDocument.Parse("<root>" + cont + "</root>");
 
-                IEnumerable<XElement> ll = from XElement e in xdoc.Descendants("Face").Nodes()
+                IEnumerable<XElement> ff = from XElement e in xdoc.Descendants("Face").Nodes()
                     .Where(ee => (((XElement)ee).Name.ToString() != "Landmark") && (((XElement)ee).Name.ToString() != "Gaze"))
-                    .GroupBy(g => ((XElement)g).Name.ToString(), v => Convert.ToDouble(((XElement)v).Value, CultureInfo.InvariantCulture))
-                    .Select(g => new XElement(g.Key, g.Where(v => Math.Abs(v) < GlobalVar.MaxAccountedVal).Average().ToString()))
+                    .GroupBy(g => ((XElement)g).Name.ToString(), v => (double?)Convert.ToDouble(((XElement)v).Value, CultureInfo.InvariantCulture))
+                    .Select(g => new XElement(g.Key, g.Where(v => Math.Abs((double)v) < GlobalVar.MaxAccountedVal).Average().ToString()))
                                            select e;
 
                 var gaze = (from XElement e in xdoc.Descendants("Face").Nodes().Where(ee => (((XElement)ee).Name.ToString() == "Gaze"))
                             select e.Value.ToString().Split(' '))
                                      .Select(a => new { x = Convert.ToDouble(a[0], CultureInfo.InvariantCulture), y = Convert.ToDouble(a[1], CultureInfo.InvariantCulture) });
-                var cd = new XDocument(new XElement("root", new XElement("Face", new XAttribute("id", "0"), ll)));
+                var cd = new XDocument(new XElement("root"));
+                if (ff.Any())  cd.Element("root").Add(new XElement("Face", new XAttribute("id", "0"), ff));
 
                 string gazemark = null;
-                if (gaze.Count() > 0)
+                if (gaze.Any())
                 {
                     XElement gg = new XElement("Gaze", gaze.Average(g => g.x).ToString() + " " + gaze.Average(g => g.y).ToString());
                     cd.Descendants("Face").FirstOrDefault().Add(gg);
@@ -267,15 +180,27 @@ namespace EmoMerge
                     .GroupBy(g => ((XElement)g).Name.ToString(), v => Convert.ToDouble(((XElement)v).Value, CultureInfo.InvariantCulture))
                     .Select(g => new XElement(g.Key, g.Average().ToString()))
                                            select e;
-                if (pp.Count() > 0)
+                if (pp.Any())
                     cd.Element("root").Add(new XElement("Person", new XAttribute("id", "0"), pp));
 
-                var emotion = (from XElement p in query
-                               group p by p.Nodes().OfType<XText>() into gp
+                /*var emotion = (from XElement p in query
+                               group p by p.Nodes().OfType<XText>().ToString() into gp
                                orderby gp.Count() descending
                                select gp)
                                     .Take(1)
                                     .Select(g => g.Key);
+
+                var emotion = (from string e in c.Nodes().OfType<XText>().ToString().Split('\n') 
+                               group e by e.Trim() into gp
+                               orderby gp.Count() descending
+                               select gp)
+                                    .Take(1)
+                                    .Select(g => g.Key).FirstOrDefault();
+                                    */
+                var emotion = (from string e in c.Nodes().OfType<XText>().FirstOrDefault().ToString().Split('\n')
+                               group e by e.Trim() into gp
+                               orderby gp.Count() descending
+                               select gp.Key).Take(1).SingleOrDefault();
 
                 string cdata = "";
                 foreach (XElement ee in cd.Descendants("root").Nodes())
@@ -309,7 +234,7 @@ namespace EmoMerge
 
         }
 
-        public static void Smooth(FileStream first, FileStream output, int interval)
+        public static void Smooth(Stream first, Stream output, int interval)
         {
 
             TimeSpan dt = TimeSpan.FromSeconds(interval);
@@ -355,19 +280,20 @@ namespace EmoMerge
                 XDocument xdoc = XDocument.Parse("<root>" + cdata + "</root>");
 
 
-                IEnumerable<XElement> ll = from XElement e in xdoc.Descendants("Face").Nodes()
+                IEnumerable<XElement> ff = from XElement e in xdoc.Descendants("Face").Nodes()
                         .Where(ee => (((XElement)ee).Name.ToString() != "Landmark") && (((XElement)ee).Name.ToString() != "Gaze"))
-                        .GroupBy(g => ((XElement)g).Name.ToString(), v => Convert.ToDouble(((XElement)v).Value, CultureInfo.InvariantCulture))
-                        .Select(g => new XElement(g.Key, g.Where(v => Math.Abs(v) < GlobalVar.MaxAccountedVal).Average().ToString()))
+                        .GroupBy(g => ((XElement)g).Name.ToString(), v => (string.IsNullOrEmpty(((XElement)v).Value) ? null : (double?)Convert.ToDouble(((XElement)v).Value, CultureInfo.InvariantCulture)))
+                        .Select(g => new XElement(g.Key, g.Where(v => v!=null&&Math.Abs((double)v) < GlobalVar.MaxAccountedVal).Average().ToString()))
                                            select e;
                 var gaze = (from XElement e in xdoc.Descendants("Face").Nodes().Where(ee => (((XElement)ee).Name.ToString() == "Gaze"))
                             select e.Value.ToString().Split(' '))
                                         .Select(a => new { x = Convert.ToDouble(a[0], CultureInfo.InvariantCulture), y = Convert.ToDouble(a[1], CultureInfo.InvariantCulture) });
 
-                var cd = new XDocument(new XElement("root", new XElement("Face", new XAttribute("id", "0"), ll)));
+                var cd = new XDocument(new XElement("root"));
+                if (ff.Any()) cd.Element("root").Add(new XElement("Face", new XAttribute("id", "0"), ff));
 
                 string gazemark=null;
-                if (gaze.Count() > 0)
+                if (gaze.Any())
                 {
                     XElement gg = new XElement("Gaze", gaze.Average(g => g.x).ToString() + " " + gaze.Average(g => g.y).ToString());
                     cd.Descendants("Face").FirstOrDefault().Add(gg);
@@ -378,16 +304,24 @@ namespace EmoMerge
                     .GroupBy(g => ((XElement)g).Name.ToString(), v => Convert.ToDouble(((XElement)v).Value, CultureInfo.InvariantCulture))
                     .Select(g => new XElement(g.Key, g.Average().ToString()))
                                            select e;
-                if (pp.Count() > 0)
+                if (pp.Any())
                     cd.Element("root").Add(new XElement("Person", new XAttribute("id", "0"), pp));
 
+                //O(Nln(N))
                 var emotion = (from XElement p in query
-                               group p by p.Nodes().OfType<XText>() into gp
+                               group p by (p.Nodes().OfType<XText>().FirstOrDefault() == null ? "" : p.Nodes().OfType<XText>().FirstOrDefault().ToString().Trim()) into gp
                                orderby gp.Count() descending
                                select gp)
-                                    .Take(1)
-                                    .Select(g => g.Key);
+                               .Take(1)
+                               .Select(g => g.Key);
 
+                /*O(N)
+                var emotions = (from XElement p in query
+                               group p by (p.Nodes().OfType<XText>().FirstOrDefault() == null?"": p.Nodes().OfType<XText>().FirstOrDefault().ToString().Trim()) into gp
+                               select new { gp.Key, c = gp.Count() });
+                int max = emotions.Max(e => e.c);
+                var emotion = emotions.Where(e => e.c == max).FirstOrDefault();
+                               */
                 cdata = "";
                 foreach (XElement ee in cd.Descendants("root").Nodes())
                 {
