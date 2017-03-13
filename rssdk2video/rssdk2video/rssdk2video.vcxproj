@@ -73,7 +73,7 @@
       </Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>xcopy /y  $(TargetPath) $(SolutionDir)..\bin</Command>
+      <Command>xcopy /y  $(TargetPath) $(SolutionDir)..\bin\$(PlatformTarget)\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
